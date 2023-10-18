@@ -48,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_044727) do
   create_table "packages", force: :cascade do |t|
     t.integer "volume"
     t.integer "weight"
-    t.string "type"
+    t.string "package_type"
     t.integer "cargo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_044727) do
   create_table "trucks", force: :cascade do |t|
     t.boolean "autonomy"
     t.integer "capacity"
-    t.string "type"
+    t.string "truck_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
