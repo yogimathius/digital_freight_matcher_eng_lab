@@ -3,7 +3,7 @@ class CreateTrucks < ActiveRecord::Migration[7.0]
     create_table :trucks do |t|
       t.boolean :autonomy
       t.integer :capacity
-      t.string :type
+      t.string :truck_type
 
       t.timestamps
     end
