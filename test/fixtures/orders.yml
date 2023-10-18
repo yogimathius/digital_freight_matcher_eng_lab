@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  origin: one
+  destination: one
+  client: one
+  route: one
+
+two:
+  origin: two
+  destination: two
+  client: two
+  route: two
