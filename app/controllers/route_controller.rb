@@ -28,11 +28,19 @@ class RouteController < ApplicationController
 
   # How to store array of profitable routes?
   def get(order: {})
-    if order.empty?
-      return []
+    if is_valid_order?(order)
+      return [@mock_route]
     end
-    binding.break
+    []
+  end
 
-    [@mock_route]
+  def is_valid_order?(order)
+    if order.empty? 
+      return false
+    end
+    if order["pick_up"].nil?
+      return false
+    end
+    true
   end
 end
