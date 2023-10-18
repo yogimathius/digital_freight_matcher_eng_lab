@@ -1,4 +1,3 @@
 class Route < ApplicationRecord
-  belongs_to :origin
-  belongs_to :destination
+  belongs_to :location
 end
