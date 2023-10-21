@@ -10,12 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_18_044727) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_21_183222) do
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_weight_lbs"
+    t.integer "total_volume_cubic_feet"
+    t.float "pallet_per_truck"
+    t.float "pallet_cost_per_mile"
+    t.float "std_package_per_truck"
+    t.float "std_package_cost_per_mile"
     t.index ["order_id"], name: "index_cargos_on_order_id"
     t.index ["truck_id"], name: "index_cargos_on_truck_id"
   end
@@ -62,6 +68,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_044727) do
     t.string "path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "anchor_point"
+    t.float "miles_with_cargo"
+    t.float "total_miles"
+    t.float "operational_truck_cost"
+    t.integer "pallets"
+    t.float "cargo_cost"
+    t.float "empty_cargo_cost"
+    t.float "markup"
+    t.float "price_based_on_total_cost"
+    t.float "price_based_on_cargo_cost"
+    t.float "margin"
+    t.integer "pickup_dropoff_qty"
+    t.float "time_hours"
     t.index ["destination_id"], name: "index_routes_on_destination_id"
     t.index ["origin_id"], name: "index_routes_on_origin_id"
   end
@@ -72,6 +91,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_044727) do
     t.string "truck_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "total_costs_per_mile"
+    t.float "trucker_cost"
+    t.float "fuel_cost"
+    t.float "leasing_cost"
+    t.float "maintenance_cost"
+    t.float "insurance_cost"
+    t.float "miles_per_gallon"
+    t.float "gas_price"
+    t.float "avg_speed_miles_per_hour"
   end
 
   add_foreign_key "cargos", "orders"
