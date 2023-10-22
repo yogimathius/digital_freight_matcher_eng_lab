@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_21_183222) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_22_043127) do
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
@@ -64,7 +64,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_183222) do
   create_table "routes", force: :cascade do |t|
     t.integer "origin_id"
     t.integer "destination_id"
-    t.float "profitability"
     t.string "path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
