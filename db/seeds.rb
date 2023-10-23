@@ -107,4 +107,4 @@ package1 = Package.create!(
 
 # Repeat the same formatting for package2
 
-puts "Seed data created successfully."
+Rails.logger.debug "Seed data created successfully."
