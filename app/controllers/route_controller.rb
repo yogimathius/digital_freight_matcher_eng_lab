@@ -55,14 +55,12 @@ class RouteController < ApplicationController
 
   def spherical_distance(start_coords, end_coords)
     radius = 6372.8 # rough radius of the Earth, in kilometers
-    # binding.break
     lat1, long1 = deg2rad *start_coords
     lat2, long2 = deg2rad *end_coords
     2 * radius * asin(sqrt((sin((lat2-lat1)/2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1)/2)**2))))
   end
 
   def deg2rad(lat, long)
-    # binding.break
     [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
   end
 end
