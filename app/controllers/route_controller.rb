@@ -27,11 +27,18 @@ class RouteController < ApplicationController
       }
     ]
   end
-
+  
   # How to store array of profitable routes?
   def get(order: {})
     if is_valid_order?(order)
-      return [@mock_route]
+      matching_waypoints = @mock_route.select do |route|
+        spherical_distance(route, order["pick_up"]) < 1
+      end
+
+      if matching_waypoints.present?
+        return [@mock_route]
+      end
+      []
     end
     []
   end
@@ -46,21 +53,16 @@ class RouteController < ApplicationController
     true
   end
 
+  def spherical_distance(start_coords, end_coords)
+    radius = 6372.8 # rough radius of the Earth, in kilometers
+    # binding.break
+    lat1, long1 = deg2rad *start_coords
+    lat2, long2 = deg2rad *end_coords
+    2 * radius * asin(sqrt((sin((lat2-lat1)/2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1)/2)**2))))
+  end
 
-Radius = 6372.8  # rough radius of the Earth, in kilometers
-
-def spherical_distance(start_coords, end_coords)
-  lat1, long1 = deg2rad *start_coords
-  lat2, long2 = deg2rad *end_coords
-  2 * Radius * asin(sqrt((sin((lat2-lat1)/2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1)/2)**2))))
-end
-
-def deg2rad(lat, long)
-  [lat * PI / 180, long * PI / 180]
-end
-
-bna = [36.12, -86.67]
-lax = [33.94, -118.4]
-
-Rails.logger.debug "%.1f" % spherical_distance(bna, lax)
+  def deg2rad(lat, long)
+    # binding.break
+    [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
+  end
 end

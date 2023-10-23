@@ -18,6 +18,29 @@ class RouteControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
+    @mock_route = [
+      {
+      "latitude" => 33.754413815792205,
+      "longitude" => -84.3875298776525
+      },
+      {
+      "latitude" => 34.87433823445323,
+      "longitude" => -85.084123334995166
+      },
+      {
+      "latitude" => 34.87433823445323,
+      "longitude" => -85.084123334995166
+      },
+      {
+      "latitude" => 34.87433824316913,
+      "longitude" => -85.08447506395166
+      },
+      {
+      "latitude" => 33.754413815792205,
+      "longitude" => -84.3875298776525 
+      }
+    ]
+
     @route_controller = RouteController.new
   end
 
@@ -37,5 +60,11 @@ class RouteControllerTest < ActionDispatch::IntegrationTest
     result = @route_controller.get(order: incomplete)
 
     assert_equal [], result
+  end
+
+  test "returns eligible route if coords match waypoint" do
+    result = @route_controller.get(order: @mock_order)
+
+    assert_equal [@mock_route], result
   end
 end
