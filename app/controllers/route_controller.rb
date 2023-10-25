@@ -31,12 +31,15 @@ class RouteController < ApplicationController
   # How to store array of profitable routes?
   def get(order: {})
     if is_valid_order?(order)
-      matching_waypoints = @mock_route.select do |route|
-        spherical_distance(route, order["pick_up"]) < 1
-      end
+      routes = Route.all
+      order_coords = {
+        latitude: order["latitude"],
+        longitude: order["longitude"]
+      }
+      matching_routes = filter_routes(order_coords, routes)
 
-      if matching_waypoints.present?
-        return [@mock_route]
+      if matching_routes.present?
+        return [matching_routes]
       end
       []
     end
@@ -64,8 +67,7 @@ class RouteController < ApplicationController
     [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
   end
 
-  include Math
-
+  # Using Heron's formula: 
   def get_triangular_height(
     distance_from_origin,
     distance_from_destination,
@@ -76,9 +78,14 @@ class RouteController < ApplicationController
     root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
     root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
 
-    # Return 
     area = (0.25 * root1 * root2 * root3 * root4)
 
     2 * area / route_distance
+  end
+
+  def filter_routes(order_coords, routes)
+    routes.select do |route|
+      route.in_range?(order_coords, route)
+    end
   end
 end
