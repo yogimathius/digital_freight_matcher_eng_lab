@@ -1,3 +1,4 @@
 class Route < ApplicationRecord
-  belongs_to :location, foreign_key: :destination_id, inverse_of: :routes
+  belongs_to :origin, class_name: 'Location'
+  belongs_to :destination, class_name: 'Location'
 end

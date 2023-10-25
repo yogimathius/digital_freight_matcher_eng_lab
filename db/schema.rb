@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_22_043127) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_234946) do
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_043127) do
     t.float "margin"
     t.integer "pickup_dropoff_qty"
     t.float "time_hours"
+    t.string "contract_name"
     t.index ["destination_id"], name: "index_routes_on_destination_id"
     t.index ["origin_id"], name: "index_routes_on_origin_id"
   end
