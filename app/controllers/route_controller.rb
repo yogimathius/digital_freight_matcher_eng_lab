@@ -63,4 +63,22 @@ class RouteController < ApplicationController
   def deg2rad(lat, long)
     [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
   end
+
+  include Math
+
+  def get_triangular_height(
+    distance_from_origin,
+    distance_from_destination,
+    route_distance
+  )
+    root1 = Math.sqrt(distance_from_destination + route_distance + distance_from_origin)
+    root2 = Math.sqrt(-distance_from_destination + route_distance + distance_from_origin)
+    root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
+    root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
+
+    # Return 
+    area = (0.25 * root1 * root2 * root3 * root4)
+
+    2 * area / route_distance
+  end
 end
