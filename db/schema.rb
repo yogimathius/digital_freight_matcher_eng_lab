@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_234946) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_26_060755) do
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
@@ -100,6 +100,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_234946) do
     t.float "miles_per_gallon"
     t.float "gas_price"
     t.float "avg_speed_miles_per_hour"
+    t.integer "route_id"
+    t.index ["route_id"], name: "index_trucks_on_route_id"
   end
 
   add_foreign_key "cargos", "orders"
