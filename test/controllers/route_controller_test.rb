@@ -67,18 +67,4 @@ class RouteControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal [@mock_route], result
   end
-
-  test "get_triangular_height" do
-    atlanta_to_resecca = 64.74
-    ringgold_to_resecca = 25.52
-    atlanta_to_ringgold = 90.24
-
-    triangular_height = RouteController.new.get_triangular_height(
-      atlanta_to_resecca,
-      ringgold_to_resecca,
-      atlanta_to_ringgold
-    )
-
-    assert_equal 0.8555837887170749, triangular_height
-  end
 end

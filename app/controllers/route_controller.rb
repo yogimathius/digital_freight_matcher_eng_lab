@@ -31,13 +31,21 @@ class RouteController < ApplicationController
   # How to store array of profitable routes?
   def get(order: {})
     if is_valid_order?(order)
-      routes = Route.all
-      order_coords = {
-        latitude: order["latitude"],
-        longitude: order["longitude"]
+      pickup_coords = {
+        latitude: order["pick_up"]["latitude"],
+        longitude: order["pick_up"]["longitude"]
       }
-      matching_routes = filter_routes(order_coords, routes)
 
+      dropoff_coords = {
+        latitude: order["drop_off"]["latitude"],
+        longitude: order["drop_off"]["longitude"]
+      }
+
+      matching_routes = Route.select do |route|
+        # binding.break
+        route.in_range?(pickup_coords, route) &&
+          route.in_range?(dropoff_coords, route)
+      end
       if matching_routes.present?
         return [matching_routes]
       end
@@ -54,38 +62,5 @@ class RouteController < ApplicationController
       return false
     end
     true
-  end
-
-  def spherical_distance(start_coords, end_coords)
-    radius = 6372.8 # rough radius of the Earth, in kilometers
-    lat1, long1 = deg2rad *start_coords
-    lat2, long2 = deg2rad *end_coords
-    2 * radius * asin(sqrt((sin((lat2-lat1)/2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1)/2)**2))))
-  end
-
-  def deg2rad(lat, long)
-    [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
-  end
-
-  # Using Heron's formula: 
-  def get_triangular_height(
-    distance_from_origin,
-    distance_from_destination,
-    route_distance
-  )
-    root1 = Math.sqrt(distance_from_destination + route_distance + distance_from_origin)
-    root2 = Math.sqrt(-distance_from_destination + route_distance + distance_from_origin)
-    root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
-    root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
-
-    area = (0.25 * root1 * root2 * root3 * root4)
-
-    2 * area / route_distance
-  end
-
-  def filter_routes(order_coords, routes)
-    routes.select do |route|
-      route.in_range?(order_coords, route)
-    end
   end
 end
