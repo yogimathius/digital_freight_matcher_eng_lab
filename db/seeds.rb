@@ -262,7 +262,72 @@ truck1 = Truck.create!(
   insurance_cost: 0.10,
   miles_per_gallon: 6.5,
   gas_price: 3.23,
-  avg_speed_miles_per_hour: 50.0
+  avg_speed_miles_per_hour: 50.0,
+  route_id: route1.id
+)
+
+truck2 = Truck.create!(
+  autonomy: true,
+  capacity: 100,
+  truck_type: "Truck Type A",
+  total_costs_per_mile: 1.816923077,
+  trucker_cost: 0.78,
+  fuel_cost: 0.50,
+  leasing_cost: 0.27,
+  maintenance_cost: 0.17,
+  insurance_cost: 0.10,
+  miles_per_gallon: 6.5,
+  gas_price: 3.23,
+  avg_speed_miles_per_hour: 50.0,
+  route_id: route2.id
+)
+
+truck3 = Truck.create!(
+  autonomy: true,
+  capacity: 100,
+  truck_type: "Truck Type A",
+  total_costs_per_mile: 1.816923077,
+  trucker_cost: 0.78,
+  fuel_cost: 0.50,
+  leasing_cost: 0.27,
+  maintenance_cost: 0.17,
+  insurance_cost: 0.10,
+  miles_per_gallon: 6.5,
+  gas_price: 3.23,
+  avg_speed_miles_per_hour: 50.0,
+  route_id: route3.id
+)
+
+truck4 = Truck.create!(
+  autonomy: true,
+  capacity: 100,
+  truck_type: "Truck Type A",
+  total_costs_per_mile: 1.816923077,
+  trucker_cost: 0.78,
+  fuel_cost: 0.50,
+  leasing_cost: 0.27,
+  maintenance_cost: 0.17,
+  insurance_cost: 0.10,
+  miles_per_gallon: 6.5,
+  gas_price: 3.23,
+  avg_speed_miles_per_hour: 50.0,
+  route_id: route4.id
+)
+
+truck5 = Truck.create!(
+  autonomy: true,
+  capacity: 100,
+  truck_type: "Truck Type A",
+  total_costs_per_mile: 1.816923077,
+  trucker_cost: 0.78,
+  fuel_cost: 0.50,
+  leasing_cost: 0.27,
+  maintenance_cost: 0.17,
+  insurance_cost: 0.10,
+  miles_per_gallon: 6.5,
+  gas_price: 3.23,
+  avg_speed_miles_per_hour: 50.0,
+  route_id: route5.id
 )
 
 # Repeat the same formatting for truck2
