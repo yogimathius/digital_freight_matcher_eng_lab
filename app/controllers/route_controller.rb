@@ -27,58 +27,58 @@ class RouteController < ApplicationController
       }
     ]
   end
-  
-  # How to store array of profitable routes?
-  def get(order: {})
-    if is_valid_order?(order)
-      matching_waypoints = @mock_route.select do |route|
-        spherical_distance(route, order["pick_up"]) < 1
-      end
 
-      if matching_waypoints.present?
-        return [@mock_route]
-      end
-      []
-    end
-    []
+  def get(order: {})
+    return nil unless is_valid_order?(order)
+
+    pickup_coords = {
+      latitude: order[:pick_up][:latitude],
+      longitude: order[:pick_up][:longitude]
+    }
+
+    dropoff_coords = {
+      latitude: order[:drop_off][:latitude],
+      longitude: order[:drop_off][:longitude]
+    }
+
+    # Find matching routes for proximity (within 1 km)
+    matching_pick_up_routes = get_routes_in_range(pickup_coords)
+
+    matching_drop_off_routes = get_routes_in_range(dropoff_coords)
+
+    # Check truck package capacity (make sure order doesn’t overload truck)
+    # matching_routes = matching_routes.filter do |route|
+      
+    # end
+    # Check truck shift duration (route doesn’t exceed 10 hrs)
+    # matching_routes = matching_routes.filter do |route|
+    
+    # end
+    
+    routes_found = matching_pick_up_routes.present? && matching_drop_off_routes.present?
+
+    # What should we really return? I think a message would be nice for the merchant at this point
+    return nil unless routes_found
+
+    {
+      matching_origin_routes: matching_pick_up_routes,
+      matching_drop_off_routes: matching_drop_off_routes
+    }
   end
 
   def is_valid_order?(order)
-    if order.empty? 
+    if order.empty?
       return false
     end
-    if order["pick_up"].nil?
+    if order[:pick_up].nil?
       return false
     end
     true
   end
 
-  def spherical_distance(start_coords, end_coords)
-    radius = 6372.8 # rough radius of the Earth, in kilometers
-    lat1, long1 = deg2rad *start_coords
-    lat2, long2 = deg2rad *end_coords
-    2 * radius * asin(sqrt((sin((lat2-lat1)/2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1)/2)**2))))
-  end
-
-  def deg2rad(lat, long)
-    [(lat[1] * Math::PI / 180), (long[1] * Math::PI / 180)]
-  end
-
-  include Math
-
-  def get_triangular_height(
-    distance_from_origin,
-    distance_from_destination,
-    route_distance
-  )
-    root1 = Math.sqrt(distance_from_destination + route_distance + distance_from_origin)
-    root2 = Math.sqrt(-distance_from_destination + route_distance + distance_from_origin)
-    root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
-    root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
-
-    # Return 
-    area = (0.25 * root1 * root2 * root3 * root4)
-
-    2 * area / route_distance
+  def get_routes_in_range(order_coords)
+    Route.select do |route|
+      route.in_range?(order_coords, route)
+    end
   end
 end
