@@ -233,8 +233,7 @@ route10 = Route.create!(
   time_hours: 4.3,
   contract_name: "Incurred"
 )
-# Repeat the same formatting for route3, route4, and route5
- 
+
 # Create some orders
 order1 = Order.create!(
   origin_id: ringgold.id,
