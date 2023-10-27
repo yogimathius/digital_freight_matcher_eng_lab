@@ -1,5 +1,7 @@
 # Engineering Lab 1 - Digital Freight Matching
 
+[Git Workflow](#git-workflow)
+
 # Problem Statement
 
 Infinity and Beyond, a family-owned trucking enterprise based in Atlanta, GA, recently landed a significant contract with the Too-Big-To-Fail company. This substantial collaboration led them to acquire five new trucks and establish expansive routes spanning the entirety of the state. Despite having fixed rates determined by the volume of cargo transported, the company faces challenges. The mounting pressures of inflation and decreased contracted cargo have caused them to feel the financial pinch on some of these routes.
@@ -76,6 +78,67 @@ route: [
 ### Current Routes
 
 ![routes](/assets/existing_routes.png)
+
+### Git Workflow
+
+```
+git pull main
+git checkout -b GH-username/action-to-update-repo (add, remove, update, or fix...)
+```
+
+Once work is complete: **On working branch**
+
+```
+git add . // or add individual files via vscode source control(RECOMMENDED)
+git commit -m "add commit message here" (also with same action verbs: add, remove, update or fix...)
+git push origin <branchname>
+```
+
+At this point, your command line will output this type of message:
+
+```
+Enumerating objects: 38, done.
+Counting objects: 100% (38/38), done.
+adsasdadfadfgadsfasds
+Delta compression using up to 8 threads
+Compressing objects: 100% (28/28), done.
+Writing objects: 100% (28/28), 2.81 KiB | 1.40 MiB/s, done.
+Total 28 (delta 18), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (18/18), completed with 8 local objects.
+remote:
+remote: Create a pull request for 'yogimathius/update-db-relations' on GitHub by visiting:
+remote:      https://github.com/yogimathius/digital_freight_matcher_eng_lab/pull/new/yogimathius/update-db-relations // <- `cmd + click`
+remote:
+To github.com:yogimathius/digital_freight_matcher_eng_lab.git
+```
+
+`cmd + click` the link to create a new pull request (redirects to github)
+
+Steps for reviewing:
+
+1. open draft pr
+2. self-review files changed
+3. once files are viewed, mark "ready for review", request reviews from teammates
+4. once approved, click rebase and merge in GH
+
+Steps for updating other branches with latest changes in main:
+
+```
+git pull main
+git checkout <branchname>
+git rebase main
+```
+
+**^^^^ (conflicts may need to be resolved here)**
+
+If they do:
+
+1. review conflicts in vscodes source control
+2. accept current/incoming/both change(s) depending on what you think is accurate, at this point it may be good to check it over with a teammate if you are unsure!
+3. `git add <filename-with-conflicts>` to stage the file but **do not commit, as it is not necessary when rebasing**
+4. `git rebase --continue` to continue or finish rebasing
+
+You may need to resolve conflicts more than once before you are finished rebasing, as it checks one commit in your branch at a time, from oldest to newest.
 
 # References
 
