@@ -15,4 +15,5 @@ class Truck < ApplicationRecord
   validates :miles_per_gallon, presence: true, numericality: { greater_than: 0 }
   validates :gas_price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :avg_speed_miles_per_hour, presence: true, numericality: { greater_than: 0 }
+  has_many :cargos, dependent: :destroy
 end
