@@ -15,6 +15,7 @@ class Route < ApplicationRecord
   belongs_to :destination, class_name: 'Location'
   has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
+  has_one :truck, dependent: :destroy
 
   def self.routes_in_range(order_params, proximity)
     pick_up_coords, drop_off_coords = order_coords(order_params)
