@@ -4,7 +4,10 @@ class Route < ApplicationRecord
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
   has_many :orders, dependent: :destroy
+  has_one :truck, dependent: :destroy
 
+  
+  
   # rubocop:disable Metrics/AbcSize
   def spherical_distance(start_coords, end_coords)
     radius = 6372.8 # rough radius of the Earth, in kilometers
