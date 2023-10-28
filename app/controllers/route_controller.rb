@@ -38,6 +38,15 @@ class RouteController < ApplicationController
     matching_pick_up_routes.filter do |route|
       matching_drop_off_routes.map(&:id).include?(route.id)
     end
+    truck_capacity = CargoItem.new(9180, 1700)
+
+    matching_pick_up_routes = select_fitting_cargo(matching_pick_up_routes, truck_capacity)
+
+
+    {
+      matching_origin_routes: matching_pick_up_routes,
+      matching_drop_off_routes: matching_drop_off_routes
+    }
   end
 
   def valid_order?(order)
@@ -52,4 +61,26 @@ class RouteController < ApplicationController
       route.in_range?(order_coords, route)
     end
   end
+  
+  def select_fitting_cargo(routes, truck_capacity)
+    routes.filter do |route|
+      route_cargo_fits_truck?(route, truck_capacity)
+    end
+  end
+
+  def route_cargo_fits_truck?(route, truck_capacity)
+    total_weight = 0
+    total_volume = 0
+
+    route.cargo_items.each do |cargo_item|
+      total_weight += cargo_item.weight
+      total_volume += cargo_item.volume
+    end
+
+    cargo_fits_weight = total_weight <= truck_capacity.max_weight
+    cargo_fits_volume = total_volume <= truck_capacity.total_volume
+
+    cargo_fits_weight && cargo_fits_volume
+  end
 end
+
