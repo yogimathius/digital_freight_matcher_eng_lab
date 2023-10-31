@@ -5,6 +5,7 @@ class Route < ApplicationRecord
   belongs_to :destination, class_name: 'Location'
   has_many :orders, dependent: :destroy
 
+  # rubocop:disable Metrics/AbcSize
   def spherical_distance(start_coords, end_coords)
     radius = 6372.8 # rough radius of the Earth, in kilometers
     lat1, long1 = deg2rad(start_coords[:latitude], start_coords[:longitude])
@@ -12,6 +13,7 @@ class Route < ApplicationRecord
 
     2 * radius * asin(sqrt((sin((lat2 - lat1) / 2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1) / 2)**2))))
   end
+  # rubocop:enable Metrics/AbcSize
 
   def deg2rad(lat, long)
     [(lat * Math::PI / 180), (long * Math::PI / 180)]
@@ -23,11 +25,14 @@ class Route < ApplicationRecord
     distance_from_destination,
     route_distance
   )
-    s = (distance_from_origin + distance_from_destination + route_distance) / 2.0
-    area = Math.sqrt(s * (s - distance_from_origin) * (s - distance_from_destination) * (s - route_distance))
-  
-    # Height of the triangle
-    triangular_height = 2 * area / route_distance
+    root1 = Math.sqrt(distance_from_destination + route_distance + distance_from_origin)
+    root2 = Math.sqrt(-distance_from_destination + route_distance + distance_from_origin)
+    root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
+    root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
+    # α = acos(((route_distance ** 2) + (distance_from_destination ** 2 )- (distance_from_origin ** 2)) / (2 * route_distance * distance_from_destination))
+    area = (0.25 * root1 * root2 * root3 * root4)
+
+    2 * area / route_distance
   end
 
   def in_range?(order_coords, route)
@@ -51,13 +56,14 @@ class Route < ApplicationRecord
       return true
     end
 
-    # if distance_from_origin < 1 || distance_from_destination < 1
-      # binding.break
-      # return true
-    # end
-    # b
-    triangular_height = get_triangular_height(distance_from_origin,     distance_from_destination,route_distance)
-    puts triangular_height
+    return true unless distance_from_origin > 1 && distance_from_destination > 1
+
+    triangular_height = get_triangular_height(
+      distance_from_origin,
+      distance_from_destination,
+      route_distance
+    )
+    Rails.logger.debug triangular_height
     triangular_height < 1
   end
 end
