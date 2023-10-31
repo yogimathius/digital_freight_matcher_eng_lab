@@ -1,0 +1,49 @@
+name: Rails CI
+
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.x # Use your desired Ruby version
+
+      - name: Bundle install
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+        working-directory: ./your_rails_app_directory
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14 # Use your desired Node.js version
+
+      - name: Install Yarn
+        run: |
+          yarn install --check-files
+        working-directory: ./your_rails_app_directory
+
+      - name: Run RuboCop
+        run: |
+          bundle exec rubocop
+        working-directory: ./your_rails_app_directory
+
+      - name: Setup Database
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+        working-directory: ./your_rails_app_directory
+
+      - name: Run RSpec Tests
+        run: |
+          bundle exec rspec
+        working-directory: ./your_rails_app_directory
