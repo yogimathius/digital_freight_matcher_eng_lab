@@ -60,10 +60,9 @@ class RouteController < ApplicationController
     # What should we really return? I think a message would be nice for the merchant at this point
     return nil unless routes_found
 
-    {
-      matching_origin_routes: matching_pick_up_routes,
-      matching_drop_off_routes: matching_drop_off_routes
-    }
+    matching_pick_up_routes.filter do |route|
+      matching_drop_off_routes.map(&:id).include?(route.id)
+    end
   end
 
   def is_valid_order?(order)
