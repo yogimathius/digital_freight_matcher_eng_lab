@@ -238,7 +238,7 @@ route10 = Route.create!(
 order1 = Order.create!(
   origin_id: ringgold.id,
   destination_id: atlanta.id,
-  client: client1,  
+  client: client1,
   route: route1
 )
 order2 = Order.create!(
