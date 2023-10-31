@@ -3,41 +3,41 @@
 atlanta:
   id: 1
   latitude: 33.7488
-  longitude: 84.3877
+  longitude: -84.3877
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
 ringgold:
   id: 2
   latitude: 34.9249
-  longitude: 85.1098
+  longitude: -85.1098
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
 augusta:
   id: 3
   latitude: 33.4735
-  longitude: 82.0105
+  longitude: -82.0105
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
 savannah:
   id: 4
   latitude: 32.0809
-  longitude: 81.0912
+  longitude: -81.0912
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
 albany:
   id: 5
   latitude: 31.5785
-  longitude: 84.1558
+  longitude: -84.1558
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
 columbus:
   id: 6
   latitude: 32.4610
-  longitude: 84.9877
+  longitude: -84.9877
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
