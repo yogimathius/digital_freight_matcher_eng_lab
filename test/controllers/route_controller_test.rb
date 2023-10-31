@@ -40,12 +40,10 @@ class RouteControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "returns eligible routes if coords match waypoint" do
-    skip
     result = @route_controller.get(order: @mock_order)
 
+    # ID 1 is Ringgold
     expected = Route.find(1)
-
-
 
     assert_equal [expected], result
   end
