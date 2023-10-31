@@ -20,7 +20,7 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-        working-directory: ./your_rails_app_directory
+        working-directory: .
 
       - name: Install Node.js
         uses: actions/setup-node@v2
@@ -30,20 +30,14 @@ jobs:
       - name: Install Yarn
         run: |
           yarn install --check-files
-        working-directory: ./your_rails_app_directory
+        working-directory: .
 
       - name: Run RuboCop
         run: |
           bundle exec rubocop
-        working-directory: ./your_rails_app_directory
-
-      - name: Setup Database
-        run: |
-          bundle exec rake db:create
-          bundle exec rake db:schema:load
-        working-directory: ./your_rails_app_directory
+        working-directory: .
 
       - name: Run RSpec Tests
         run: |
-          bundle exec rspec
-        working-directory: ./your_rails_app_directory
+          bin/rails test
+        working-directory: .
