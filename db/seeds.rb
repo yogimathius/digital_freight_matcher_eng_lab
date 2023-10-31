@@ -5,32 +5,32 @@ client2 = Client.create!
 # Create some locations
 atlanta = Location.create!(
   latitude: 33.7488,
-  longitude: 84.3877
+  longitude: -84.3877
 )
 
 ringgold = Location.create!(
   latitude: 34.9249,
-  longitude: 85.1098
+  longitude: --85.1098
 )
 
 augusta = Location.create!(
   latitude: 33.4735,
-  longitude: 82.0105
+  longitude: -82.0105
 )
 
 savannah = Location.create!(
   latitude: 32.0809,
-  longitude: 81.0912
+  longitude: -81.0912
 )
 
 albany = Location.create!(
   latitude: 31.5785,
-  longitude: 84.1558
+  longitude: -84.1558
 )
 
 columbus = Location.create!(
   latitude: 32.4610,
-  longitude: 84.9877
+  longitude: -84.9877
 )
 
 # Create some routes
@@ -51,7 +51,7 @@ route1 = Route.create!(
   margin: 12.94,
   pickup_dropoff_qty: 2,
   time_hours: 4.0,
-  contract_name: "Too-Big-To-Fail"
+  contract_name: "Incurred"
 )
 
 # Route 2: Augusta
@@ -71,7 +71,7 @@ route2 = Route.create!(
   margin: 18.59,
   pickup_dropoff_qty: 2,
   time_hours: 3.8,
-  contract_name: "Too-Big-To-Fail"
+  contract_name: "Incurred"
 )
 
 # Route 3: Savannah
@@ -91,7 +91,7 @@ route3 = Route.create!(
   margin: 24.24,
   pickup_dropoff_qty: 2,
   time_hours: 9.9,
-  contract_name: "Too-Big-To-Fail"
+  contract_name: "Incurred"
 )
 
 # Route 4: Albany
@@ -111,7 +111,7 @@ route4 = Route.create!(
   margin: -4.00,
   pickup_dropoff_qty: 2,
   time_hours: 7.3,
-  contract_name: "Too-Big-To-Fail"
+  contract_name: "Incurred"
 )
 
 # Route 5: Columbus
@@ -129,106 +129,6 @@ route5 = Route.create!(
   price_based_on_total_cost: 543.72,
   price_based_on_cargo_cost: 368.4533864,
   margin: 1.65,
-  pickup_dropoff_qty: 2,
-  time_hours: 4.3,
-  contract_name: "Too-Big-To-Fail"
-)
-
-# Route 6: Ringgold
-route6 = Route.create!(
-  origin_id: atlanta.id,
-  destination_id: ringgold.id,
-  anchor_point: "Ringgold",
-  miles_with_cargo: 101.0,
-  total_miles: 202.0,
-  operational_truck_cost: 367.02,
-  pallets: 12,
-  cargo_cost: 165.80599,
-  empty_cargo_cost: 201.21,
-  markup: 0.5,
-  price_based_on_total_cost: 550.53,
-  price_based_on_cargo_cost: 248.708981,
-  margin: -32.24,
-  pickup_dropoff_qty: 2,
-  time_hours: 4.0,
-  contract_name: "Incurred"
-)
-
-# Route 7: Augusta
-route7 = Route.create!(
-  origin_id: atlanta.id,
-  destination_id: augusta.id,
-  anchor_point: "Augusta",
-  miles_with_cargo: 94.6,
-  total_miles: 189.2,
-  operational_truck_cost: 343.76,
-  pallets: 10,
-  cargo_cost: 129.41622,
-  empty_cargo_cost: 214.35,
-  markup: 0.5,
-  price_based_on_total_cost: 515.64,
-  price_based_on_cargo_cost: 194.1243367,
-  margin: -43.53,
-  pickup_dropoff_qty: 2,
-  time_hours: 3.8,
-  contract_name: "Incurred"
-)
-
-# Route 8: Savannah
-route8 = Route.create!(
-  origin_id: atlanta.id,
-  destination_id: savannah.id,
-  anchor_point: "Savannah",
-  miles_with_cargo: 248.0,
-  total_miles: 496.0,
-  operational_truck_cost: 901.19,
-  pallets: 11,
-  cargo_cost: 373.20028,
-  empty_cargo_cost: 527.99,
-  markup: 0.5,
-  price_based_on_total_cost: 1351.79,
-  price_based_on_cargo_cost: 559.8004127,
-  margin: -37.88,
-  pickup_dropoff_qty: 2,
-  time_hours: 9.9,
-  contract_name: "Incurred"
-)
-
-# Route 9: Albany
-route9 = Route.create!(
-  origin_id: atlanta.id,
-  destination_id: albany.id,
-  anchor_point: "Albany",
-  miles_with_cargo: 182.0,
-  total_miles: 364.0,
-  operational_truck_cost: 661.36,
-  pallets: 12,
-  cargo_cost: 298.77911,
-  empty_cargo_cost: 362.58,
-  markup: 0.5,
-  price_based_on_total_cost: 992.04,
-  price_based_on_cargo_cost: 448.1686588,
-  margin: -32.24,
-  pickup_dropoff_qty: 2,
-  time_hours: 7.3,
-  contract_name: "Incurred"
-)
-
-# Route 10: Columbus
-route10 = Route.create!(
-  origin_id: atlanta.id,
-  destination_id: columbus.id,
-  anchor_point: "Columbus",
-  miles_with_cargo: 107.0,
-  total_miles: 214.0,
-  operational_truck_cost: 388.82,
-  pallets: 9,
-  cargo_cost: 131.74189,
-  empty_cargo_cost: 257.08,
-  markup: 0.5,
-  price_based_on_total_cost: 583.23,
-  price_based_on_cargo_cost: 197.612829,
-  margin: -49.18,
   pickup_dropoff_qty: 2,
   time_hours: 4.3,
   contract_name: "Incurred"
