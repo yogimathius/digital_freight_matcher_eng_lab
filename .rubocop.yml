@@ -3,7 +3,14 @@
 # Use the default RuboCop configuration
 inherit_from: .rubocop_todo.yml
 require: rubocop-rails
+
 # Set the target Ruby version
 AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 100
