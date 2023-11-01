@@ -35,7 +35,6 @@ class Route < ApplicationRecord
     2 * area / route_distance
   end
 
-  # rubocop:disable Metrics/MethodLength
   def in_range?(order_coords, route)
     distance_from_origin = spherical_distance(
       order_coords,
@@ -67,5 +66,4 @@ class Route < ApplicationRecord
     Rails.logger.debug triangular_height
     triangular_height < 1
   end
-  # rubocop:enable Metrics/MethodLength
 end

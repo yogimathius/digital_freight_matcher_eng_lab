@@ -1,0 +1,102 @@
+<%= form_with(model: route) do |form| %>
+  <% if route.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(route.errors.count, "error") %> prohibited this route from being saved:</h2>
+
+      <ul>
+        <% route.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :origin_id, style: "display: block" %>
+    <%= form.number_field :origin_id %>
+  </div>
+
+  <div>
+    <%= form.label :destination_id, style: "display: block" %>
+    <%= form.number_field :destination_id %>
+  </div>
+
+  <div>
+    <%= form.label :path, style: "display: block" %>
+    <%= form.text_field :path %>
+  </div>
+
+  <div>
+    <%= form.label :anchor_point, style: "display: block" %>
+    <%= form.text_field :anchor_point %>
+  </div>
+
+  <div>
+    <%= form.label :miles_with_cargo, style: "display: block" %>
+    <%= form.text_field :miles_with_cargo %>
+  </div>
+
+  <div>
+    <%= form.label :total_miles, style: "display: block" %>
+    <%= form.text_field :total_miles %>
+  </div>
+
+  <div>
+    <%= form.label :operational_truck_cost, style: "display: block" %>
+    <%= form.text_field :operational_truck_cost %>
+  </div>
+
+  <div>
+    <%= form.label :pallets, style: "display: block" %>
+    <%= form.number_field :pallets %>
+  </div>
+
+  <div>
+    <%= form.label :cargo_cost, style: "display: block" %>
+    <%= form.text_field :cargo_cost %>
+  </div>
+
+  <div>
+    <%= form.label :empty_cargo_cost, style: "display: block" %>
+    <%= form.text_field :empty_cargo_cost %>
+  </div>
+
+  <div>
+    <%= form.label :markup, style: "display: block" %>
+    <%= form.text_field :markup %>
+  </div>
+
+  <div>
+    <%= form.label :price_based_on_total_cost, style: "display: block" %>
+    <%= form.text_field :price_based_on_total_cost %>
+  </div>
+
+  <div>
+    <%= form.label :price_based_on_cargo_cost, style: "display: block" %>
+    <%= form.text_field :price_based_on_cargo_cost %>
+  </div>
+
+  <div>
+    <%= form.label :margin, style: "display: block" %>
+    <%= form.text_field :margin %>
+  </div>
+
+  <div>
+    <%= form.label :pickup_dropoff_qty, style: "display: block" %>
+    <%= form.number_field :pickup_dropoff_qty %>
+  </div>
+
+  <div>
+    <%= form.label :time_hours, style: "display: block" %>
+    <%= form.text_field :time_hours %>
+  </div>
+
+  <div>
+    <%= form.label :contract_name, style: "display: block" %>
+    <%= form.text_field :contract_name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
