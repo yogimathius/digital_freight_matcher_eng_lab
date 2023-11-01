@@ -3,33 +3,8 @@ class RouteController < ApplicationController
 
   attr_accessor :order
 
-  def initialize
-    @mock_route = [
-      {
-      "latitude" => 33.754413815792205,
-      "longitude" => -84.3875298776525
-      },
-      {
-      "latitude" => 34.87433823445323,
-      "longitude" => -85.084123334995166
-      },
-      {
-      "latitude" => 34.87433823445323,
-      "longitude" => -85.084123334995166
-      },
-      {
-      "latitude" => 34.87433824316913,
-      "longitude" => -85.08447506395166
-      },
-      {
-      "latitude" => 33.754413815792205,
-      "longitude" => -84.3875298776525 
-      }
-    ]
-  end
-
   def get(order: {})
-    return nil unless is_valid_order?(order)
+    return nil unless valid_order?(order)
 
     pickup_coords = {
       latitude: order[:pick_up][:latitude],
@@ -48,13 +23,13 @@ class RouteController < ApplicationController
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     # matching_routes = matching_routes.filter do |route|
-      
+
     # end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
     # matching_routes = matching_routes.filter do |route|
-    
+
     # end
-    
+
     routes_found = matching_pick_up_routes.present? && matching_drop_off_routes.present?
 
     # What should we really return? I think a message would be nice for the merchant at this point
@@ -65,13 +40,10 @@ class RouteController < ApplicationController
     end
   end
 
-  def is_valid_order?(order)
-    if order.empty?
-      return false
-    end
-    if order[:pick_up].nil?
-      return false
-    end
+  def valid_order?(order)
+    return false if order.empty?
+    return false if order[:pick_up].nil?
+
     true
   end
 
