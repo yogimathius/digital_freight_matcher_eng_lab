@@ -10,7 +10,7 @@ atlanta = Location.create!(
 
 ringgold = Location.create!(
   latitude: 34.9249,
-  longitude: --85.1098
+  longitude: -85.1098
 )
 
 augusta = Location.create!(
