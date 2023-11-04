@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   constraints format: :json do
-    get '/matching_routes', to: 'routes#get_matching_routes'
+    get '/matching_routes', to: 'routes#matching_routes'
   end
 end
