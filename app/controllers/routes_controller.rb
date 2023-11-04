@@ -67,23 +67,24 @@ class RoutesController < ApplicationController
     end
   end
 
-  def get_matching_routes(order: {})
-    return nil unless valid_order?(order)
-
-    pickup_coords = {
-      latitude: order[:pick_up][:latitude],
-      longitude: order[:pick_up][:longitude]
-    }
-
-    dropoff_coords = {
-      latitude: order[:drop_off][:latitude],
-      longitude: order[:drop_off][:longitude]
-    }
+  # rubocop:disable Metrics/AbcSize
+  def matching_routes
+    return nil unless valid_order?(order_params)
 
     # Find matching routes for proximity (within 1 km)
-    matching_pick_up_routes = get_routes_in_range(pickup_coords)
+    matching_pick_up_routes = get_routes_in_range(
+      {
+        latitude: order_params[:drop_off][:latitude],
+        longitude: order_params[:drop_off][:longitude]
+      }
+    )
 
-    matching_drop_off_routes = get_routes_in_range(dropoff_coords)
+    matching_drop_off_routes = get_routes_in_range(
+      {
+        latitude: order_params[:pick_up][:latitude],
+        longitude: order_params[:pick_up][:longitude]
+      }
+    )
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     # matching_routes = matching_routes.filter do |route|
@@ -96,13 +97,15 @@ class RoutesController < ApplicationController
 
     routes_found = matching_pick_up_routes.present? && matching_drop_off_routes.present?
 
-    # What should we really return? I think a message would be nice for the merchant at this point
     return nil unless routes_found
 
-    matching_pick_up_routes.filter do |route|
+    matching_routes = matching_pick_up_routes.filter do |route|
       matching_drop_off_routes.map(&:id).include?(route.id)
     end
+
+    render json: matching_routes, status: :unprocessable_entity
   end
+  # rubocop:enable Metrics/AbcSize
 
   def valid_order?(order)
     return false if order.empty?
@@ -129,5 +132,13 @@ class RoutesController < ApplicationController
   def route_params
     params.require(:route).permit(:origin_id, :destination_id, :path, :anchor_point, :miles_with_cargo, :total_miles, :operational_truck_cost, :pallets, :cargo_cost, :empty_cargo_cost, :markup,
                                   :price_based_on_total_cost, :price_based_on_cargo_cost, :margin, :pickup_dropoff_qty, :time_hours, :contract_name)
+  end
+
+  def order_params
+    params.require(:order).permit(
+      cargo: { packages: [] },
+      pick_up: [:latitude, :longitude],
+      drop_off: [:latitude, :longitude]
+    )
   end
 end
