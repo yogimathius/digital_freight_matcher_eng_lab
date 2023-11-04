@@ -4,4 +4,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  Rails.application.routes.draw do
+    get '/matching_routes', to: 'routes_controller#get_matching_routes'
+  end
 end
