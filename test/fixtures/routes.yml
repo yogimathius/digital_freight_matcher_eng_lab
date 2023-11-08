@@ -1,43 +1,43 @@
 # routes.yml
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  origin_id: 1
-  destination_id: 1
-  path: MyString
-  anchor_point: MyString
-  miles_with_cargo: 1.5
-  total_miles: 1.5
-  operational_truck_cost: 1.5
-  pallets: 1
-  cargo_cost: 1.5
-  empty_cargo_cost: 1.5
-  markup: 1.5
-  price_based_on_total_cost: 1.5
-  price_based_on_cargo_cost: 1.5
-  margin: 1.5
-  pickup_dropoff_qty: 1
-  time_hours: 1.5
-  contract_name: MyString
+# one:
+#   origin_id: 1
+#   destination_id: 1
+#   path: MyString
+#   anchor_point: MyString
+#   miles_with_cargo: 1.5
+#   total_miles: 1.5
+#   operational_truck_cost: 1.5
+#   pallets: 1
+#   cargo_cost: 1.5
+#   empty_cargo_cost: 1.5
+#   markup: 1.5
+#   price_based_on_total_cost: 1.5
+#   price_based_on_cargo_cost: 1.5
+#   margin: 1.5
+#   pickup_dropoff_qty: 1
+#   time_hours: 1.5
+#   contract_name: MyString
 
-two:
-  origin_id: 1
-  destination_id: 1
-  path: MyString
-  anchor_point: MyString
-  miles_with_cargo: 1.5
-  total_miles: 1.5
-  operational_truck_cost: 1.5
-  pallets: 1
-  cargo_cost: 1.5
-  empty_cargo_cost: 1.5
-  markup: 1.5
-  price_based_on_total_cost: 1.5
-  price_based_on_cargo_cost: 1.5
-  margin: 1.5
-  pickup_dropoff_qty: 1
-  time_hours: 1.5
-  contract_name: MyString
+# two:
+#   origin_id: 1
+#   destination_id: 1
+#   path: MyString
+#   anchor_point: MyString
+#   miles_with_cargo: 1.5
+#   total_miles: 1.5
+#   operational_truck_cost: 1.5
+#   pallets: 1
+#   cargo_cost: 1.5
+#   empty_cargo_cost: 1.5
+#   markup: 1.5
+#   price_based_on_total_cost: 1.5
+#   price_based_on_cargo_cost: 1.5
+#   margin: 1.5
+#   pickup_dropoff_qty: 1
+#   time_hours: 1.5
+#   contract_name: MyString
 
 route1:
   id: 1

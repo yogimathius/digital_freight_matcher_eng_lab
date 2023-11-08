@@ -38,9 +38,9 @@ class RouteController < ApplicationController
     matching_pick_up_routes.filter do |route|
       matching_drop_off_routes.map(&:id).include?(route.id)
     end
-    truck_capacity = CargoItem.new(9180, 1700)
+    # truck_capacity = CargoItem.new(9180, 1700)
 
-    matching_pick_up_routes = select_fitting_cargo(matching_pick_up_routes, truck_capacity)
+    matching_pick_up_routes = select_fitting_cargo(matching_pick_up_routes, order)
 
 
     {
@@ -62,9 +62,9 @@ class RouteController < ApplicationController
     end
   end
   
-  def select_fitting_cargo(routes, truck_capacity)
+  def select_fitting_cargo(routes, order)
     routes.filter do |route|
-      route_cargo_fits_truck?(route, truck_capacity)
+      route.truck.has_capacity?(order[:cargo])
     end
   end
 

@@ -16,6 +16,7 @@ truck1:
   avg_speed_miles_per_hour: 50.0
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
+  route_id: 1
 
 truck2:
   id: 2
@@ -33,3 +34,4 @@ truck2:
   avg_speed_miles_per_hour: 55.0
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
+  route_id: 2
