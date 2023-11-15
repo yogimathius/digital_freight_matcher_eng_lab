@@ -166,7 +166,7 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Invalid order parameters', @response.body
   end
 
-  test "returns eligible routes if coords match waypoint" do
+  test "returns eligible route if coords match waypoint" do
     get matching_routes_url params: { order: @mock_order }
 
     # ID 1 is Ringgold
