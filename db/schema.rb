@@ -10,18 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_26_060755) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "max_weight_lbs"
-    t.integer "total_volume_cubic_feet"
-    t.float "pallet_per_truck"
-    t.float "pallet_cost_per_mile"
-    t.float "std_package_per_truck"
-    t.float "std_package_cost_per_mile"
     t.index ["order_id"], name: "index_cargos_on_order_id"
     t.index ["truck_id"], name: "index_cargos_on_truck_id"
   end
