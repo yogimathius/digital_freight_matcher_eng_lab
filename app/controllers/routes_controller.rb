@@ -100,10 +100,18 @@ class RoutesController < ApplicationController
 
     routes_found = matching_pick_up_routes.present? && matching_drop_off_routes.present?
 
-    return nil unless routes_found
+    unless routes_found
+      render plain: 'No routes found', status: :unprocessable_entity
+      return
+    end
 
     matching_routes = matching_pick_up_routes.filter do |route|
       matching_drop_off_routes.map(&:id).include?(route.id)
+    end
+
+    unless matching_routes.any?
+      render plain: 'No routes found', status: :unprocessable_entity
+      return
     end
 
     render json: matching_routes, status: :ok
