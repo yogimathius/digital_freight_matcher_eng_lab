@@ -1,0 +1,28 @@
+<%= form_tag('/matching_routes', method: :get) do %>
+  <div class="field">
+    <%= label_tag 'Cargo Packages comma separated' %>
+    <%= text_field_tag 'packages' %>
+  </div>
+
+  <div class="field">
+    <%= label_tag 'Pick Up Latitude' %>
+    <%= text_field_tag 'pickup latitude' %>
+  </div>
+
+  <div class="field">
+    <%= label_tag 'Pick Up Longitude' %>
+    <%= text_field_tag 'pickup longitude' %>
+  </div>
+
+  <div class="field">
+    <%= label_tag 'Drop Off Latitude' %>
+    <%= text_field_tag 'drop off latitude' %>
+  </div>
+
+  <div class="field">
+    <%= label_tag 'Drop Off Longitude' %>
+    <%= text_field_tag 'drop_off longitude' %>
+  </div>
+
+  <%= submit_tag 'Submit' %>
+<% end %>

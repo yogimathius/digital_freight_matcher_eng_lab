@@ -67,6 +67,10 @@ class RoutesController < ApplicationController
     end
   end
 
+  def request_routes
+    render 'routes/request_routes'
+  end
+
   # rubocop:disable Metrics/AbcSize
   def matching_routes
     return nil unless valid_order?(order_params)
