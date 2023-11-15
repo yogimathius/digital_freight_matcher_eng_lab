@@ -234,13 +234,7 @@ truck5 = Truck.create!(
 # Create some cargos
 cargo1 = Cargo.create!(
   order: order1,
-  truck: truck1,
-  max_weight_lbs: 9180,
-  total_volume_cubic_feet: 1700,
-  pallet_per_truck: 26.6,
-  pallet_cost_per_mile: 0.07,
-  std_package_per_truck: 94.4,
-  std_package_cost_per_mile: 0.02
+  truck: truck1
 )
 
 # Repeat the same formatting for cargo2

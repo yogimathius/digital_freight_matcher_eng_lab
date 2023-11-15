@@ -4,12 +4,6 @@ cargo1:
   id: 1
   order_id: 1
   truck_id: 1
-  max_weight_lbs: 9180
-  total_volume_cubic_feet: 1700
-  pallet_per_truck: 26.6
-  pallet_cost_per_mile: 0.07
-  std_package_per_truck: 94.4
-  std_package_cost_per_mile: 0.02
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
 
@@ -17,11 +11,5 @@ cargo2:
   id: 2
   order_id: 2
   truck_id: 2
-  max_weight_lbs: 9500
-  total_volume_cubic_feet: 1600
-  pallet_per_truck: 25.5
-  pallet_cost_per_mile: 0.08
-  std_package_per_truck: 90.2
-  std_package_cost_per_mile: 0.03
   created_at: "2023-10-24 00:00:00"
   updated_at: "2023-10-24 00:00:00"
