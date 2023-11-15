@@ -14,3 +14,10 @@ Rails/I18nLocaleTexts:
 
 Metrics/MethodLength:
   Max: 100
+  Exclude:
+    - "**/*_test.rb"
+
+Metrics/ClassLength:
+  Max: 400
+  Exclude:
+    - "**/*_test.rb"
