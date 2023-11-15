@@ -67,7 +67,6 @@ class RoutesController < ApplicationController
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def matching_routes
     unless valid_order?(order_params)
       render plain: 'Invalid order parameters', status: :unprocessable_entity
@@ -75,19 +74,12 @@ class RoutesController < ApplicationController
     end
 
     # Find matching routes for proximity (within 1 km)
-    matching_pick_up_routes = get_routes_in_range(
-      {
-        latitude: order_params[:drop_off][:latitude].to_f,
-        longitude: order_params[:drop_off][:longitude].to_f
-      }
-    )
+    matching_routes = get_matching_routes(order_params)
 
-    matching_drop_off_routes = get_routes_in_range(
-      {
-        latitude: order_params[:pick_up][:latitude].to_f,
-        longitude: order_params[:pick_up][:longitude].to_f
-      }
-    )
+    unless matching_routes.any?
+      render plain: 'No routes found', status: :unprocessable_entity
+      return
+    end
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     # matching_routes = matching_routes.filter do |route|
@@ -98,25 +90,8 @@ class RoutesController < ApplicationController
 
     # end
 
-    routes_found = matching_pick_up_routes.present? && matching_drop_off_routes.present?
-
-    unless routes_found
-      render plain: 'No routes found', status: :unprocessable_entity
-      return
-    end
-
-    matching_routes = matching_pick_up_routes.filter do |route|
-      matching_drop_off_routes.map(&:id).include?(route.id)
-    end
-
-    unless matching_routes.any?
-      render plain: 'No routes found', status: :unprocessable_entity
-      return
-    end
-
     render json: matching_routes, status: :ok
   end
-  # rubocop:enable Metrics/AbcSize
 
   def valid_order?(order)
     return false if order.empty?
@@ -127,9 +102,33 @@ class RoutesController < ApplicationController
     true
   end
 
-  def get_routes_in_range(order_coords)
-    Route.select do |route|
-      route.in_range?(order_coords, route)
+  def get_routes_in_range(order_params)
+    pick_up_coords = {
+      latitude: order_params[:drop_off][:latitude].to_f,
+      longitude: order_params[:drop_off][:longitude].to_f
+    }
+
+    drop_off_coords = {
+      latitude: order_params[:pick_up][:latitude].to_f,
+      longitude: order_params[:pick_up][:longitude].to_f
+    }
+
+    matching_pick_up_route = Route.select do |route|
+      route.in_range?(pick_up_coords, route)
+    end
+
+    matching_drop_off_routes = Route.select do |route|
+      route.in_range?(drop_off_coords, route)
+    end
+
+    [matching_pick_up_route, matching_drop_off_routes]
+  end
+
+  def get_matching_routes(order_params)
+    matching_pick_up_routes, matching_drop_off_routes = get_routes_in_range(order_params)
+
+    matching_pick_up_routes.filter do |route|
+      matching_drop_off_routes.map(&:id).include?(route.id)
     end
   end
 
