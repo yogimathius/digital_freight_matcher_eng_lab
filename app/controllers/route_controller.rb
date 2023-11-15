@@ -49,7 +49,7 @@ class RouteController < ApplicationController
 
   def get_routes_in_range(order_coords)
     Route.select do |route|
-      route.in_range?(order_coords, route)
+      route.in_range?(order_coords)
     end
   end
 end
