@@ -77,15 +77,15 @@ class RoutesController < ApplicationController
     # Find matching routes for proximity (within 1 km)
     matching_pick_up_routes = get_routes_in_range(
       {
-        latitude: order_params[:drop_off][:latitude],
-        longitude: order_params[:drop_off][:longitude]
+        latitude: order_params[:drop_off][:latitude].to_f,
+        longitude: order_params[:drop_off][:longitude].to_f
       }
     )
 
     matching_drop_off_routes = get_routes_in_range(
       {
-        latitude: order_params[:pick_up][:latitude],
-        longitude: order_params[:pick_up][:longitude]
+        latitude: order_params[:pick_up][:latitude].to_f,
+        longitude: order_params[:pick_up][:longitude].to_f
       }
     )
 

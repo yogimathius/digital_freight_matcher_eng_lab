@@ -111,7 +111,7 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "should raise error if order missing pick_up" do
+  test "should return invalid params message if order missing pick_up" do
     get matching_routes_url, params: {
       order: {
         cargo: {
@@ -129,7 +129,7 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Invalid order parameters', @response.body
   end
 
-  test "should raise error if order missing cargo" do
+  test "should return invalid params message if order missing cargo" do
     get matching_routes_url, params: {
       order: {
         pick_up: {
@@ -148,7 +148,7 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Invalid order parameters', @response.body
   end
 
-  test "should raise error if order missing dropoff" do
+  test "should return invalid params message if order missing dropoff" do
     get matching_routes_url, params: {
       order: {
         cargo: {
@@ -164,5 +164,16 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
 
     assert_equal 'Invalid order parameters', @response.body
+  end
+
+  test "returns eligible routes if coords match waypoint" do
+    get matching_routes_url params: { order: @mock_order }
+
+    # ID 1 is Ringgold
+    expected = Route.find(1)
+
+    assert_response :ok
+
+    assert_equal [expected].to_json, @response.body
   end
 end
