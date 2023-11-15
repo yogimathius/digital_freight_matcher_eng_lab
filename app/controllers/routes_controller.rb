@@ -69,7 +69,10 @@ class RoutesController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   def matching_routes
-    return nil unless valid_order?(order_params)
+    unless valid_order?(order_params)
+      render plain: 'Invalid order parameters', status: :unprocessable_entity
+      return
+    end
 
     # Find matching routes for proximity (within 1 km)
     matching_pick_up_routes = get_routes_in_range(
@@ -103,14 +106,15 @@ class RoutesController < ApplicationController
       matching_drop_off_routes.map(&:id).include?(route.id)
     end
 
-    render json: matching_routes, status: :unprocessable_entity
+    render json: matching_routes, status: :ok
   end
   # rubocop:enable Metrics/AbcSize
 
   def valid_order?(order)
     return false if order.empty?
-
     return false if order[:pick_up].nil?
+    return false if order[:cargo].nil?
+    return false if order[:drop_off].nil?
 
     true
   end

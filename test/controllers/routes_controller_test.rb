@@ -2,7 +2,22 @@ require "test_helper"
 
 class RoutesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    @mock_order = {
+      cargo: {
+        packages: [1, 60, 'standard']
+      },
+      pick_up: {
+        latitude: 33.754413815792205,
+        longitude: -84.3875298776525
+      },
+      drop_off: {
+        latitude: 34.87433824316913,
+        longitude: -85.08447506395166
+      }
+    }
+
     @route = routes(:one)
+    @route1 = routes(:route1)
   end
 
   test "should get index" do
@@ -82,5 +97,72 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to routes_url
+  end
+
+  test "should raise error if no order provided" do
+    assert_raises(ActionController::ParameterMissing) do
+      get matching_routes_url, params: {}
+    end
+  end
+
+  test "should raise error if order incomplete" do
+    assert_raises(ActionController::ParameterMissing) do
+      get matching_routes_url, params: { order: {} }
+    end
+  end
+
+  test "should raise error if order missing pick_up" do
+    get matching_routes_url, params: {
+      order: {
+        cargo: {
+          packages: [1, 60, 'standard']
+        },
+        drop_off: {
+          latitude: 34.87433824316913,
+          longitude: -85.08447506395166
+        }
+      }
+    }
+
+    assert_response :unprocessable_entity
+
+    assert_equal 'Invalid order parameters', @response.body
+  end
+
+  test "should raise error if order missing cargo" do
+    get matching_routes_url, params: {
+      order: {
+        pick_up: {
+          latitude: 33.754413815792205,
+          longitude: -84.3875298776525
+        },
+        drop_off: {
+          latitude: 34.87433824316913,
+          longitude: -85.08447506395166
+        }
+      }
+    }
+
+    assert_response :unprocessable_entity
+
+    assert_equal 'Invalid order parameters', @response.body
+  end
+
+  test "should raise error if order missing dropoff" do
+    get matching_routes_url, params: {
+      order: {
+        cargo: {
+          packages: [1, 60, 'standard']
+        },
+        pick_up: {
+          latitude: 33.754413815792205,
+          longitude: -84.3875298776525
+        }
+      }
+    }
+
+    assert_response :unprocessable_entity
+
+    assert_equal 'Invalid order parameters', @response.body
   end
 end
