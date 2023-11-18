@@ -8,7 +8,7 @@ class Route < ApplicationRecord
   has_many :orders, dependent: :destroy
 
   def in_range?(order_coords)
-    OrderService.in_range?(order_coords, route_distance)
+    OrderService.in_range?(order_coords, self, route_distance)
   end
 
   def profitability(order)
