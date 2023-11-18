@@ -3,6 +3,7 @@ class Route < ApplicationRecord
 
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
+  has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
 
   # rubocop:disable Metrics/AbcSize
