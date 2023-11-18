@@ -94,24 +94,14 @@ class RoutesController < ApplicationController
   end
 
   def valid_order?(order)
-    return false if order.empty?
-    return false if order[:pick_up].nil?
-    return false if order[:cargo].nil?
-    return false if order[:drop_off].nil?
-
-    true
+    !order.empty? &&
+      !order[:pick_up].nil? &&
+      !order[:cargo].nil? &&
+      !order[:drop_off].nil?
   end
 
   def get_routes_in_range(order_params)
-    pick_up_coords = {
-      latitude: order_params[:drop_off][:latitude].to_f,
-      longitude: order_params[:drop_off][:longitude].to_f
-    }
-
-    drop_off_coords = {
-      latitude: order_params[:pick_up][:latitude].to_f,
-      longitude: order_params[:pick_up][:longitude].to_f
-    }
+    pick_up_coords, drop_off_coords = OrderService.order_coords(order_params)
 
     matching_pick_up_route = Route.select do |route|
       route.in_range?(pick_up_coords)
