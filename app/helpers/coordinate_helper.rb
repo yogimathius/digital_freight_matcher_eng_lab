@@ -1,6 +1,8 @@
 module CoordinateHelper
   module_function
 
+  include Math
+
   def deg2rad(lat, long)
     [(lat * Math::PI / 180), (long * Math::PI / 180)]
   end
@@ -14,4 +16,34 @@ module CoordinateHelper
     2 * radius * asin(sqrt((sin((lat2 - lat1) / 2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1) / 2)**2))))
   end
   # rubocop:enable Metrics/AbcSize
+
+  def get_distances(order_coords, route)
+    distance_from_origin = spherical_distance(
+      order_coords,
+      route.origin
+    )
+
+    distance_from_destination = spherical_distance(
+      order_coords,
+      route.destination
+    )
+
+    [distance_from_origin, distance_from_destination]
+  end
+
+  # Using Heron's formula:
+  def get_triangular_height(
+    distance_from_origin,
+    distance_from_destination,
+    route_distance
+  )
+    root1 = Math.sqrt(distance_from_destination + route_distance + distance_from_origin)
+    root2 = Math.sqrt(-distance_from_destination + route_distance + distance_from_origin)
+    root3 = Math.sqrt(distance_from_destination - route_distance + distance_from_origin)
+    root4 = Math.sqrt(distance_from_destination + route_distance - distance_from_origin)
+    # α = acos(((route_distance ** 2) + (distance_from_destination ** 2 )- (distance_from_origin ** 2)) / (2 * route_distance * distance_from_destination))
+    area = (0.25 * root1 * root2 * root3 * root4)
+
+    2 * area / route_distance
+  end
 end
