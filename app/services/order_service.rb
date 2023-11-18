@@ -3,13 +3,13 @@ class OrderService
 
   def self.order_coords(order)
     pickup_coords = {
-      latitude: order[:pick_up][:latitude],
-      longitude: order[:pick_up][:longitude]
+      latitude: order[:pick_up][:latitude].to_f,
+      longitude: order[:pick_up][:longitude].to_f
     }
 
     dropoff_coords = {
-      latitude: order[:drop_off][:latitude],
-      longitude: order[:drop_off][:longitude]
+      latitude: order[:drop_off][:latitude].to_f,
+      longitude: order[:drop_off][:longitude].to_f
     }
     [pickup_coords, dropoff_coords]
   end
@@ -57,6 +57,4 @@ class OrderService
     # multiply by 1.6 to get per km value
     ((total_distance * 1.6) * 0.02) * 1.50
   end
-
-
 end
