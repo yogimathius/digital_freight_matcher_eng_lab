@@ -1,0 +1,62 @@
+class OrderService
+  extend CoordinateHelper
+
+  def self.order_coords(order)
+    pickup_coords = {
+      latitude: order[:pick_up][:latitude],
+      longitude: order[:pick_up][:longitude]
+    }
+
+    dropoff_coords = {
+      latitude: order[:drop_off][:latitude],
+      longitude: order[:drop_off][:longitude]
+    }
+    [pickup_coords, dropoff_coords]
+  end
+
+  def self.in_range?(order_coords, route_distance)
+    distance_from_origin, distance_from_destination = get_distances(order_coords)
+
+    return true if distance_from_origin < 1 || distance_from_destination < 1
+
+    triangular_height = get_triangular_height(
+      distance_from_origin,
+      distance_from_destination,
+      route_distance
+    )
+
+    triangular_height < 1
+  end
+
+  def self.profitability(order, route, route_distance)
+    pickup_coords, dropoff_coords = order_coords(order)
+
+    pickup_origin_distance, pickup_destination_distance = get_distances(pickup_coords, route)
+
+    dropoff_origin_distance, dropoff_destination_distance = get_distances(dropoff_coords, route)
+
+    pickup_from_origin = pickup_origin_distance < dropoff_origin_distance
+
+    hypotenuse = pickup_from_origin ? dropoff_origin_distance : dropoff_destination_distance
+
+    hypotenuse *= hypotenuse
+
+    triangular_height = get_triangular_height(
+      pickup_origin_distance,
+      pickup_destination_distance,
+      route_distance
+    )
+
+    triangular_height *= triangular_height
+
+    distance_from_pickup_to_dropoff = sqrt(hypotenuse + triangular_height)
+
+    total_distance = distance_from_pickup_to_dropoff + triangular_height
+
+    # return total cost per kilometer
+    # multiply by 1.6 to get per km value
+    ((total_distance * 1.6) * 0.02) * 1.50
+  end
+
+
+end
