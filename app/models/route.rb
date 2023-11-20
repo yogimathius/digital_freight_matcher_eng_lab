@@ -7,10 +7,6 @@ class Route < ApplicationRecord
   has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
 
-  def in_range?(order_coords)
-    OrderService.in_range?(order_coords, self, route_distance)
-  end
-
   def profitability(order)
     OrderService.profitability(order, self, route_distance)
   end
@@ -20,5 +16,15 @@ class Route < ApplicationRecord
       origin,
       destination
     )
+  end
+
+  def route_profit
+    order_profits = orders.map do |order|
+      order.cargo.packages.map do
+        profitability(order)
+      end.sum
+    end.sum
+
+    price_based_on_cargo_cost + order_profits
   end
 end
