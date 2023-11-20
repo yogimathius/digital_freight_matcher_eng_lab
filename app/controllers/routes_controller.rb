@@ -104,11 +104,13 @@ class RoutesController < ApplicationController
     pick_up_coords, drop_off_coords = OrderService.order_coords(order_params)
 
     matching_pick_up_route = Route.select do |route|
-      route.in_range?(pick_up_coords)
+      OrderService.in_range?(pick_up_coords, route)
+
+      # route.in_range?(pick_up_coords)
     end
 
     matching_drop_off_routes = Route.select do |route|
-      route.in_range?(drop_off_coords)
+      OrderService.in_range?(drop_off_coords, route)
     end
 
     [matching_pick_up_route, matching_drop_off_routes]
