@@ -37,26 +37,20 @@ class OrderService
 
     dropoff_origin_distance, dropoff_destination_distance = get_distances(dropoff_coords, route)
 
-    pickup_from_origin = pickup_origin_distance < dropoff_origin_distance
-
-    hypotenuse = pickup_from_origin ? dropoff_origin_distance : dropoff_destination_distance
-
-    hypotenuse *= hypotenuse
-
     triangular_height = get_triangular_height(
       pickup_origin_distance,
       pickup_destination_distance,
       route_distance
     )
 
+    hypotenuse = pickup_origin_distance < dropoff_origin_distance ? dropoff_origin_distance : dropoff_destination_distance
+
     triangular_height *= triangular_height
 
-    distance_from_pickup_to_dropoff = sqrt(hypotenuse + triangular_height)
+    distance_from_pickup_to_dropoff = sqrt((hypotenuse * hypotenuse) + triangular_height)
 
     total_distance = distance_from_pickup_to_dropoff + triangular_height
 
-    # return total cost per kilometer
-    # multiply by 1.6 to get per km value
     ((total_distance * 1.6) * 0.02) * 1.50
   end
 end
