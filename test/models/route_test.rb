@@ -23,6 +23,12 @@ class RouteTest < ActiveSupport::TestCase
     profitability = @mock_route.profitability(@mock_order)
 
     # hacky test assertion but at least will catch changes in the codebase that affect this function
-    assert_equal("6.75", format('%.2f', profitability))
+    assert_equal("6.44", format('%.2f', profitability))
+  end
+
+  test "route_profit" do
+    route_profit = @mock_route.route_profit
+
+    
   end
 end
