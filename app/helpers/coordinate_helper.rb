@@ -46,4 +46,12 @@ module CoordinateHelper
 
     2 * area / route_distance
   end
+
+  def get_hypotenuse(pickup_coords, dropoff_coords, route)
+    pickup_origin_distance, = get_distances(pickup_coords, route)
+
+    dropoff_origin_distance, dropoff_destination_distance = get_distances(dropoff_coords, route)
+
+    pickup_origin_distance < dropoff_origin_distance ? dropoff_origin_distance : dropoff_destination_distance
+  end
 end
