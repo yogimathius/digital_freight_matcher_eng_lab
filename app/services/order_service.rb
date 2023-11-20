@@ -35,17 +35,14 @@ class OrderService
 
     pickup_origin_distance, pickup_destination_distance = get_distances(pickup_coords, route)
 
-    dropoff_origin_distance, dropoff_destination_distance = get_distances(dropoff_coords, route)
-
     triangular_height = get_triangular_height(
       pickup_origin_distance,
       pickup_destination_distance,
       route_distance
     )
-
-    hypotenuse = pickup_origin_distance < dropoff_origin_distance ? dropoff_origin_distance : dropoff_destination_distance
-
     triangular_height *= triangular_height
+
+    hypotenuse = get_hypotenuse(pickup_coords, dropoff_coords, route)
 
     distance_from_pickup_to_dropoff = sqrt((hypotenuse * hypotenuse) + triangular_height)
 
