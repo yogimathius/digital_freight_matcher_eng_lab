@@ -105,8 +105,6 @@ class RoutesController < ApplicationController
 
     matching_pick_up_route = Route.select do |route|
       OrderService.in_range?(pick_up_coords, route)
-
-      # route.in_range?(pick_up_coords)
     end
 
     matching_drop_off_routes = Route.select do |route|
