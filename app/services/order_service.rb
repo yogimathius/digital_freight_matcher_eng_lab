@@ -48,6 +48,14 @@ class OrderService
 
     total_distance = distance_from_pickup_to_dropoff + triangular_height
 
-    ((total_distance * 1.6) * 0.02) * 1.50
+    calculate_package_cost(total_distance, triangular_height, route)
+  end
+
+  def self.calculate_package_cost(total_distance, triangular_height, route)
+    extra_driving_cost = (triangular_height * 2) * route.truck.total_costs_per_mile
+
+    package_distance_cost = total_distance * 1.6 * 0.02 * (1 + route.markup)
+
+    package_distance_cost - extra_driving_cost
   end
 end
