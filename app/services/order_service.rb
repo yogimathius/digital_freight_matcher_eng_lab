@@ -2,6 +2,8 @@ class OrderService
   extend CoordinateHelper
 
   def self.order_coords(order)
+    return [order.origin, order.destination] if order.instance_of?(Order)
+
     pickup_coords = {
       latitude: order[:pick_up][:latitude].to_f,
       longitude: order[:pick_up][:longitude].to_f
