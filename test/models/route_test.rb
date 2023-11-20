@@ -29,6 +29,7 @@ class RouteTest < ActiveSupport::TestCase
   test "route_profit" do
     route_profit = @mock_route.route_profit
 
-    
+    # route only has one order with one package, so these function executions will capture total extra earnings plus current cargo cost
+    assert_equal(@mock_route.price_based_on_cargo_cost + @mock_route.profitability(@mock_route.orders.first), route_profit)
   end
 end
