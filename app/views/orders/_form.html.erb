@@ -12,23 +12,58 @@
   <% end %>
 
   <div>
-    <%= form.label :origin_id, style: "display: block" %>
-    <%= form.number_field :origin_id %>
+    <!-- Packages Section -->
+    <h3>Packages</h3>
+    <%= form.fields_for :cargo do |cargo_form| %>
+      <%= cargo_form.fields_for :packages do |package_form| %>
+        <div>
+          <%= package_form.label :volume, style: "display: block" %>
+          <%= package_form.number_field :volume %>
+        </div>
+
+        <div>
+          <%= package_form.label :weight, style: "display: block" %>
+          <%= package_form.number_field :weight %>
+        </div>
+
+        <div>
+          <%= package_form.label :package_type, style: "display: block" %>
+          <%= package_form.select :package_type, [['Standard', 'standard']], {}, style: "display: block" %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 
   <div>
-    <%= form.label :destination_id, style: "display: block" %>
-    <%= form.number_field :destination_id %>
+    <!-- Pick Up Section -->
+    <h3>Pick Up</h3>
+    <%= form.fields_for :pick_up do |pick_up_form| %>
+      <div>
+        <%= pick_up_form.label :latitude, style: "display: block" %>
+        <%= pick_up_form.text_field :latitude %>
+      </div>
+
+      <div>
+        <%= pick_up_form.label :longitude, style: "display: block" %>
+        <%= pick_up_form.text_field :longitude %>
+      </div>
+    <% end %>
   </div>
 
   <div>
-    <%= form.label :client_id, style: "display: block" %>
-    <%= form.number_field :client_id %>
-  </div>
+    <!-- Drop Off Section -->
+    <h3>Drop Off</h3>
+    <%= form.fields_for :drop_off do |drop_off_form| %>
+      <div>
+        <%= drop_off_form.label :latitude, style: "display: block" %>
+        <%= drop_off_form.text_field :latitude %>
+      </div>
 
-  <div>
-    <%= form.label :route_id, style: "display: block" %>
-    <%= form.number_field :route_id %>
+      <div>
+        <%= drop_off_form.label :longitude, style: "display: block" %>
+        <%= drop_off_form.text_field :longitude %>
+      </div>
+    <% end %>
   </div>
 
   <div>
