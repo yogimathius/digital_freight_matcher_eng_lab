@@ -5,6 +5,10 @@ class Order < ApplicationRecord
   belongs_to :route
   has_one :cargo, dependent: :destroy
 
+  accepts_nested_attributes_for :origin, :destination, :cargo, allow_destroy: true
+
+  validates_associated :origin, :destination, :cargo
+
   def build_order(order_params, route, client)
     ActiveRecord::Base.transaction do
       origin, destination = create_locations(order_params)
