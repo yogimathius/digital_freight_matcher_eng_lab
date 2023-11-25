@@ -1,4 +1,6 @@
 module OrdersHelper
+  module_function
+
   include CoordinateHelper
 
   def order_coords(order)
