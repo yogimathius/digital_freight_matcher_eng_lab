@@ -16,7 +16,7 @@ module OrdersHelper
     [pickup_coords, dropoff_coords]
   end
 
-  def in_range?(order_coords, route)
+  def in_range?(order_coords, route, proximity)
     distance_from_origin, distance_from_destination = get_distances(order_coords, route)
 
     return true if distance_from_origin < 1 || distance_from_destination < 1
@@ -27,7 +27,7 @@ module OrdersHelper
       route.route_distance
     )
 
-    triangular_height < 1
+    triangular_height < proximity
   end
 
   def profitability(order, route)
