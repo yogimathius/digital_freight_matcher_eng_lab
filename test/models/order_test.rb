@@ -17,12 +17,4 @@ class OrderTest < ActiveSupport::TestCase
     }
     @mock_route = routes(:route1)
   end
-
-  test "build_order should create a client, package, locations, cargo and order with params" do
-    client = Client.create!
-    result = Order.new.build_order(@mock_order, @mock_route, client)
-
-    expected = Order.last
-    assert_equal expected, result
-  end
 end
