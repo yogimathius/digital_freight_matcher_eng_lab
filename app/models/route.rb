@@ -2,6 +2,7 @@ class Route < ApplicationRecord
   include Math
   extend OrdersHelper
   include CoordinateHelper
+  include OrdersHelper
 
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
