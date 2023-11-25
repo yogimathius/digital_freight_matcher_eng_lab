@@ -8,6 +8,37 @@ class Route < ApplicationRecord
   has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
 
+  def self.find_matching_routes_for_order(order_params)
+    pick_up_coords, drop_off_coords = OrderService.order_coords(order_params)
+
+    matching_pick_up_route = select do |route|
+      OrderService.in_range?(pick_up_coords, route)
+    end
+
+    matching_drop_off_routes = select do |route|
+      OrderService.in_range?(drop_off_coords, route)
+    end
+
+    matching_routes = matching_pick_up_route.filter do |route|
+      matching_drop_off_routes.map(&:id).include?(route.id)
+    end
+
+    # Check truck package capacity (make sure order doesn’t overload truck)
+    # matching_routes = matching_routes.filter do |route|
+
+    # end
+    # Check truck shift duration (route doesn’t exceed 10 hrs)
+    # matching_routes = matching_routes.filter do |route|
+
+    # end
+
+    matching_routes
+  end
+
+  def profitability(order)
+    OrderService.profitability(order, self, route_distance)
+  end
+
   def route_distance
     spherical_distance(
       origin,
