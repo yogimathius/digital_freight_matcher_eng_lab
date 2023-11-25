@@ -1,5 +1,6 @@
 class RoutesController < ApplicationController
   before_action :set_route, only: %i[show edit update destroy]
+  include OrdersHelper
 
   # GET /routes or /routes.json
   def index
@@ -101,14 +102,14 @@ class RoutesController < ApplicationController
   end
 
   def get_routes_in_range(order_params)
-    pick_up_coords, drop_off_coords = OrderService.order_coords(order_params)
+    pick_up_coords, drop_off_coords = order_coords(order_params)
 
     matching_pick_up_route = Route.select do |route|
-      OrderService.in_range?(pick_up_coords, route)
+      in_range?(pick_up_coords, route)
     end
 
     matching_drop_off_routes = Route.select do |route|
-      OrderService.in_range?(drop_off_coords, route)
+      in_range?(drop_off_coords, route)
     end
 
     [matching_pick_up_route, matching_drop_off_routes]

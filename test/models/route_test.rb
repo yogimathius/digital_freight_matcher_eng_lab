@@ -1,6 +1,8 @@
 require "test_helper"
 
 class RouteTest < ActiveSupport::TestCase
+  include OrdersHelper
+
   setup do
     @mock_order = {
       cargo: {
@@ -20,7 +22,7 @@ class RouteTest < ActiveSupport::TestCase
   end
 
   test "profitability" do
-    profitability = @mock_route.profitability(@mock_order)
+    profitability = profitability(@mock_order, @mock_route)
 
     # hacky test assertion but at least will catch changes in the codebase that affect this function
     assert_equal("6.44", format('%.2f', profitability))
@@ -30,6 +32,6 @@ class RouteTest < ActiveSupport::TestCase
     route_profit = @mock_route.route_profit
 
     # route only has one order with one package, so these function executions will capture total extra earnings plus current cargo cost
-    assert_equal(@mock_route.price_based_on_cargo_cost + @mock_route.profitability(@mock_route.orders.first), route_profit)
+    assert_equal(@mock_route.price_based_on_cargo_cost + profitability(@mock_route.orders.first, @mock_route), route_profit)
   end
 end
