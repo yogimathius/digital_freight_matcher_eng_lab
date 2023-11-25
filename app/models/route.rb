@@ -1,15 +1,12 @@
 class Route < ApplicationRecord
   include Math
   include CoordinateHelper
+  include OrdersHelper
 
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
   has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
-
-  def profitability(order)
-    OrderService.profitability(order, self, route_distance)
-  end
 
   def route_distance
     spherical_distance(
@@ -21,7 +18,7 @@ class Route < ApplicationRecord
   def route_profit
     order_profits = orders.map do |order|
       order.cargo.packages.map do
-        profitability(order)
+        profitability(order, self)
       end.sum
     end.sum
 
