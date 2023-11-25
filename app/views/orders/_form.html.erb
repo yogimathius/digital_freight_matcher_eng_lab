@@ -37,7 +37,7 @@
   <div>
     <!-- Pick Up Section -->
     <h3>Pick Up</h3>
-    <%= form.fields_for :pick_up do |pick_up_form| %>
+    <%= form.fields_for :origin do |pick_up_form| %>
       <div>
         <%= pick_up_form.label :latitude, style: "display: block" %>
         <%= pick_up_form.text_field :latitude %>
@@ -53,7 +53,7 @@
   <div>
     <!-- Drop Off Section -->
     <h3>Drop Off</h3>
-    <%= form.fields_for :drop_off do |drop_off_form| %>
+    <%= form.fields_for :destination do |drop_off_form| %>
       <div>
         <%= drop_off_form.label :latitude, style: "display: block" %>
         <%= drop_off_form.text_field :latitude %>
