@@ -6,7 +6,4 @@ class Cargo < ApplicationRecord
   has_many :packages, dependent: :destroy
 
   accepts_nested_attributes_for :packages, allow_destroy: true
-
-  validates :order_id, presence: true
-  validates :truck_id, presence: true
 end
