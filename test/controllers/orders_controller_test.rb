@@ -3,6 +3,7 @@ require "test_helper"
 class OrdersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @order = orders(:order1)
+    @order2 = orders(:order2)
 
     @mock_order = {
       cargo: {
@@ -47,10 +48,13 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # test "should update order" do
-  #   patch order_url(@order), params: { order: { client_id: @order.client_id, destination_id: @order.destination_id, origin_id: @order.origin_id, route_id: @order.route_id } }
-  #   assert_redirected_to order_url(@order)
-  # end
+  test "should update order" do
+    patch order_url(@order), params: { route_id: 2 }
+    @order.reload
+
+    assert_redirected_to order_url(@order)
+    assert_equal 2, @order.route_id
+  end
 
   test "should destroy order" do
     assert_difference("Order.count", -1) do

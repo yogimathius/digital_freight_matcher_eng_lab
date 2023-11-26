@@ -43,14 +43,19 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1 or /orders/1.json
   def update
-    respond_to do |format|
-      if @order.update(order_params)
-        format.html { redirect_to order_url(@order), notice: "Order was successfully updated." }
-        format.json { render :show, status: :ok, location: @order }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
+    # @order = Order.find(order_params.)
+    if @order.update(route_id: order_params_for_route)
+      redirect_to order_url(@order), notice: "Order was successfully updated."
+    else
+      # Log the error
+      # Rails.logger.error("Error in OrdersController#update: Failed to update order - #{@order.errors.full_messages}")
+  
+      # Output additional debugging information
+      # Rails.logger.error("Order params: #{order_params}")
+      Rails.logger.error("Order errors: #{@order.errors.inspect}")
+  
+      # Render an error response
+      render plain: 'Failed to update order', status: :unprocessable_entity
     end
   end
 
@@ -101,15 +106,7 @@ class OrdersController < ApplicationController
     }
   end
 
-  def order_param_two
-    params.require(:order).permit(
-      cargo_attributes: [
-        :truck_id,
-        { packages_attributes:
-          [:volume, :weight, :package_type] }
-      ],
-      origin_attributes: [:latitude, :longitude],
-      destination_attributes: [:latitude, :longitude]
-    )
+  def order_params_for_route
+    params.require(:route_id)
   end
 end
