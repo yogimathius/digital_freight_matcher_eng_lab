@@ -1,3 +1,5 @@
+# app/models/order.rb
+
 class Order < ApplicationRecord
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
@@ -8,4 +10,9 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :origin, :destination, :cargo, allow_destroy: true
 
   validates_associated :origin, :destination, :cargo
+
+  validates :origin_id, presence: true
+  validates :destination_id, presence: true
+  validates :client_id, presence: true
+  validates :route_id, presence: true
 end
