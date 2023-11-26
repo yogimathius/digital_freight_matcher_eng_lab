@@ -11,8 +11,4 @@ class Order < ApplicationRecord
 
   validates_associated :origin, :destination, :cargo
 
-  validates :origin_id, presence: true
-  validates :destination_id, presence: true
-  validates :client_id, presence: true
-  validates :route_id, presence: true
 end
