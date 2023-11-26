@@ -48,12 +48,21 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should update order" do
+  test "should update order with new route id" do
     patch order_url(@order), params: { route_id: 2 }
     @order.reload
 
     assert_redirected_to order_url(@order)
     assert_equal 2, @order.route_id
+  end
+
+  test "should fail to update order with unmatching route id" do
+    patch order_url(@order), params: { route_id: 22 }
+    @order.reload
+
+
+    assert_response :unprocessable_entity
+    assert_equal 'Failed to update order', response.body.strip
   end
 
   test "should destroy order" do

@@ -47,14 +47,6 @@ class OrdersController < ApplicationController
     if @order.update(route_id: order_params_for_route)
       redirect_to order_url(@order), notice: "Order was successfully updated."
     else
-      # Log the error
-      # Rails.logger.error("Error in OrdersController#update: Failed to update order - #{@order.errors.full_messages}")
-  
-      # Output additional debugging information
-      # Rails.logger.error("Order params: #{order_params}")
-      Rails.logger.error("Order errors: #{@order.errors.inspect}")
-  
-      # Render an error response
       render plain: 'Failed to update order', status: :unprocessable_entity
     end
   end
