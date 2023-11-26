@@ -6,5 +6,8 @@ if ENV['RAILS_ENV'] == 'test'
     # add_group 'Controllers', 'app/controllers/'
     # add_group 'Services', 'app/services/'
     add_filter 'vendor'
+    add_filter 'app/channels'
+    add_filter 'app/jobs'
+    add_filter 'app/mailers'
   end
 end
