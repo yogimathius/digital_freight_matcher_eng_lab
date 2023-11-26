@@ -534,51 +534,8 @@
           null,
           null
         ]
-      },
-      "/Users/mathiusjohnson/projects/qwasar/digital_freight_matcher_eng_lab_1/app/channels/application_cable/channel.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/mathiusjohnson/projects/qwasar/digital_freight_matcher_eng_lab_1/app/channels/application_cable/connection.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/mathiusjohnson/projects/qwasar/digital_freight_matcher_eng_lab_1/app/jobs/application_job.rb": {
-        "lines": [
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/mathiusjohnson/projects/qwasar/digital_freight_matcher_eng_lab_1/app/mailers/application_mailer.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {
-        }
       }
     },
-    "timestamp": 1700978537
+    "timestamp": 1700979156
   }
 }
