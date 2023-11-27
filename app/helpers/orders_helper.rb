@@ -21,14 +21,19 @@ module OrdersHelper
   def in_range?(order_coords, route, proximity)
     distance_from_origin, distance_from_destination = get_distances(order_coords, route)
 
-    return true if distance_from_origin < 1 || distance_from_destination < 1
+    return true if distance_from_origin < proximity || distance_from_destination < proximity
 
+    puts "distance_from_origin #{distance_from_origin}"
+    puts "distance_from_destination #{distance_from_destination}"
     triangular_height = get_triangular_height(
       distance_from_origin,
       distance_from_destination,
       route.route_distance
     )
 
+    puts "comparing"
+    puts "triangular height: #{triangular_height} "
+    puts "proximity: #{proximity}" 
     triangular_height < proximity
   end
 
