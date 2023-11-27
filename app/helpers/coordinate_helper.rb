@@ -13,9 +13,31 @@ module CoordinateHelper
     lat1, long1 = deg2rad(start_coords[:latitude].to_f, start_coords[:longitude].to_f)
     lat2, long2 = deg2rad(end_coords[:latitude].to_f, end_coords[:longitude].to_f)
 
-    2 * radius * asin(sqrt((sin((lat2 - lat1) / 2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1) / 2)**2))))
+    # 2 * radius * asin(sqrt((sin((lat2 - lat1) / 2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1) / 2)**2))))
+    distance(lat1, long1, lat2, long2, "K")
   end
   # rubocop:enable Metrics/AbcSize
+
+  def distance(lat1, lon1, lat2, lon2, unit)
+    if (lat1 == lat2) && (lon1 == lon2)
+      return 0
+    else
+      theta = lon1 - lon2
+      dist = Math.sin(lat1 * Math::PI / 180) * Math.sin(lat2 * Math::PI / 180) + Math.cos(lat1 * Math::PI / 180) * Math.cos(lat2 * Math::PI / 180) * Math.cos(theta * Math::PI / 180)
+      dist = Math.acos(dist)
+      dist = dist * 180 / Math::PI
+      miles = dist * 60 * 1.1515
+      unit = unit.upcase
+  
+      if unit == 'K'
+        return miles * 1.609344
+      elsif unit == 'N'
+        return miles * 0.8684
+      else
+        return miles
+      end
+    end
+  end
 
   def get_distances(order_coords, route)
     distance_from_origin = spherical_distance(
