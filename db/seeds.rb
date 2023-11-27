@@ -4,33 +4,25 @@ client2 = Client.create!
 
 # Create some locations
 atlanta = Location.create!(
-  latitude: 33.7488,
-  longitude: -84.3877
+  geom: ActiveRecord::Point.new(-84.3877, 33.7488)
 )
 
 ringgold = Location.create!(
-  latitude: 34.9249,
-  longitude: -85.1098
+  geom: ActiveRecord::Point.new(-85.1098, 34.9249)
 )
 
 augusta = Location.create!(
-  latitude: 33.4735,
-  longitude: -82.0105
+  geom: ActiveRecord::Point.new(-82.0105, 33.4735)
 )
 
-savannah = Location.create!(
-  latitude: 32.0809,
-  longitude: -81.0912
-)
+savannah = Location.create!(geom: ActiveRecord::Point.new(-81.0912, 32.0809))
 
 albany = Location.create!(
-  latitude: 31.5785,
-  longitude: -84.1558
+  geom: ActiveRecord::Point.new(-84.1558, 31.5785)
 )
 
 columbus = Location.create!(
-  latitude: 32.4610,
-  longitude: -84.9877
+  geom: ActiveRecord::Point.new(-84.9877, 32.4610)
 )
 
 # Create some routes
@@ -247,6 +239,4 @@ package1 = Package.create!(
   cargo: cargo1
 )
 
-# Repeat the same formatting for package2
-
-Rails.logger.debug "Seed data created successfully."
+puts "Seed data created successfully."

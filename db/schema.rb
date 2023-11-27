@@ -10,10 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_26_214059) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "cargos", force: :cascade do |t|
-    t.integer "order_id"
-    t.integer "truck_id"
+    t.bigint "order_id"
+    t.bigint "truck_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_cargos_on_order_id"
@@ -26,17 +29,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.float "latitude"
-    t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.point "geom"
   end
 
   create_table "orders", force: :cascade do |t|
-    t.integer "origin_id"
-    t.integer "destination_id"
-    t.integer "client_id"
-    t.integer "route_id"
+    t.bigint "origin_id"
+    t.bigint "destination_id"
+    t.bigint "client_id"
+    t.bigint "route_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_orders_on_client_id"
@@ -49,7 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.integer "volume"
     t.integer "weight"
     t.string "package_type"
-    t.integer "cargo_id"
+    t.bigint "cargo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cargo_id"], name: "index_packages_on_cargo_id"
@@ -59,8 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.integer "origin_id"
     t.integer "destination_id"
     t.string "path"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "anchor_point"
     t.float "miles_with_cargo"
     t.float "total_miles"
@@ -75,12 +75,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.integer "pickup_dropoff_qty"
     t.float "time_hours"
     t.string "contract_name"
-    t.index ["destination_id"], name: "index_routes_on_destination_id"
-    t.index ["origin_id"], name: "index_routes_on_origin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "trucks", force: :cascade do |t|
-    t.boolean "autonomy"
+    t.boolean "autonomy", default: false, null: false
     t.integer "capacity"
     t.string "truck_type"
     t.datetime "created_at", null: false
@@ -94,7 +94,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.float "miles_per_gallon"
     t.float "gas_price"
     t.float "avg_speed_miles_per_hour"
-    t.integer "route_id"
+    t.bigint "route_id"
     t.index ["route_id"], name: "index_trucks_on_route_id"
   end
 
@@ -105,6 +105,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
   add_foreign_key "orders", "locations", column: "origin_id"
   add_foreign_key "orders", "routes"
   add_foreign_key "packages", "cargos"
-  add_foreign_key "routes", "locations", column: "destination_id"
-  add_foreign_key "routes", "locations", column: "origin_id"
 end
