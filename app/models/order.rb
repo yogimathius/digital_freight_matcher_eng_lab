@@ -10,5 +10,4 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :origin, :destination, :cargo, allow_destroy: true
 
   validates_associated :origin, :destination, :cargo
-
 end

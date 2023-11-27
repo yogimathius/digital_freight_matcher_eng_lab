@@ -20,7 +20,5 @@ if ENV['RAILS_ENV'] == 'test'
     ENV['TEST_ENV_NUMBER'] || ENV.fetch('JOB_NUMBER', nil)
   ].compact.join('_')
 
-  if parallel_number.present?
-    SimpleCov.command_name "Job #{parallel_number}"
-  end
+  SimpleCov.command_name "Job #{parallel_number}" if parallel_number.present?
 end

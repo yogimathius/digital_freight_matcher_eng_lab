@@ -23,17 +23,17 @@ module OrdersHelper
 
     return true if distance_from_origin < proximity || distance_from_destination < proximity
 
-    puts "distance_from_origin #{distance_from_origin}"
-    puts "distance_from_destination #{distance_from_destination}"
+    Rails.logger.debug { "distance_from_origin #{distance_from_origin}" }
+    Rails.logger.debug { "distance_from_destination #{distance_from_destination}" }
     triangular_height = get_triangular_height(
       distance_from_origin,
       distance_from_destination,
       route.route_distance
     )
 
-    puts "comparing"
-    puts "triangular height: #{triangular_height} "
-    puts "proximity: #{proximity}" 
+    Rails.logger.debug "comparing"
+    Rails.logger.debug { "triangular height: #{triangular_height} " }
+    Rails.logger.debug { "proximity: #{proximity}" }
     triangular_height < proximity
   end
 
