@@ -38,6 +38,27 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert ringold_route, result
   end
 
+  test "should fail to create order if no matching routes" do
+    unmatching_order = {
+      cargo: {
+        packages: [1, 60, 'standard']
+      },
+      pick_up: {
+        latitude: 33.74724197037782,
+        longitude: -84.39022107905394
+      },
+      drop_off: {
+        latitude: 34.87433824316913,
+        longitude: -85.08447506395166
+      }
+    }
+
+    post orders_url, params: { order: unmatching_order }
+
+    assert_response :unprocessable_entity
+    assert_equal 'No routes found', response.body.strip
+  end
+
   test "should show order" do
     get order_url(@order)
     assert_response :success
@@ -59,7 +80,6 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
   test "should fail to update order with unmatching route id" do
     patch order_url(@order), params: { route_id: 22 }
     @order.reload
-
 
     assert_response :unprocessable_entity
     assert_equal 'Failed to update order', response.body.strip
