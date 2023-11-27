@@ -7,37 +7,35 @@ module CoordinateHelper
     [(lat * Math::PI / 180), (long * Math::PI / 180)]
   end
 
-  # rubocop:disable Metrics/AbcSize
+  # rough radius of the Earth, in kilometers
   def spherical_distance(start_coords, end_coords)
-    radius = 6372.8 # rough radius of the Earth, in kilometers
     lat1, long1 = deg2rad(start_coords[:latitude].to_f, start_coords[:longitude].to_f)
     lat2, long2 = deg2rad(end_coords[:latitude].to_f, end_coords[:longitude].to_f)
 
     # 2 * radius * asin(sqrt((sin((lat2 - lat1) / 2)**2) + (cos(lat1) * cos(lat2) * (sin((long2 - long1) / 2)**2))))
     distance(lat1, long1, lat2, long2, "K")
   end
-  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/AbcSize
   def distance(lat1, lon1, lat2, lon2, unit)
-    if (lat1 == lat2) && (lon1 == lon2)
-      return 0
+    return 0 if (lat1 == lat2) && (lon1 == lon2)
+
+    theta = lon1 - lon2
+    dist = (Math.sin(lat1 * Math::PI / 180) * Math.sin(lat2 * Math::PI / 180)) + (Math.cos(lat1 * Math::PI / 180) * Math.cos(lat2 * Math::PI / 180) * Math.cos(theta * Math::PI / 180))
+    dist = Math.acos(dist)
+    dist = dist * 180 / Math::PI
+    miles = dist * 60 * 1.1515
+    unit = unit.upcase
+
+    if unit == 'K'
+      miles * 1.609344
+    elsif unit == 'N'
+      miles * 0.8684
     else
-      theta = lon1 - lon2
-      dist = Math.sin(lat1 * Math::PI / 180) * Math.sin(lat2 * Math::PI / 180) + Math.cos(lat1 * Math::PI / 180) * Math.cos(lat2 * Math::PI / 180) * Math.cos(theta * Math::PI / 180)
-      dist = Math.acos(dist)
-      dist = dist * 180 / Math::PI
-      miles = dist * 60 * 1.1515
-      unit = unit.upcase
-  
-      if unit == 'K'
-        return miles * 1.609344
-      elsif unit == 'N'
-        return miles * 0.8684
-      else
-        return miles
-      end
+      miles
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def get_distances(order_coords, route)
     distance_from_origin = spherical_distance(

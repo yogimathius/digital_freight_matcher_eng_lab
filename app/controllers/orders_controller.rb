@@ -27,9 +27,8 @@ class OrdersController < ApplicationController
     @order = Order.new(order_params)
     most_profitable_route =
       Route.find_matching_routes_for_order(@order)
-    binding.break
     unless most_profitable_route.any?
-      render plain: 'No routes found', status: :unprocessable_entity 
+      render plain: 'No routes found', status: :unprocessable_entity
       return
     end
     @order.route = most_profitable_route.first

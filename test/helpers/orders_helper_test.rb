@@ -43,18 +43,17 @@ class OrdersHelperTest < ActiveSupport::TestCase
   ten_km_singles.each_with_index do |location, index|
     location_hash = location.transform_keys(&:to_sym)
     test "in_range? bulk validates pickup and dropoff points from ten km test data #{index}" do
-
       is_valid = @routes.any? do |route|
         in_range?(location_hash, route, 10)
       end
-      puts "checks out: should be #{location_hash[:valid].to_s} and is #{is_valid.to_s}"
+      puts "checks out: should be #{location_hash[:valid]} and is #{is_valid}"
       puts "checks out: #{location_hash[:valid].to_s == is_valid.to_s}"
 
       assert_equal location_hash[:valid].to_s, is_valid.to_s
     end
   end
 
-  fifty_km_singles = CSV.open("test/fixtures/files/50_km_radius_loc.csv", headers: :first_row).map(&:to_h)
+  CSV.open("test/fixtures/files/50_km_radius_loc.csv", headers: :first_row).map(&:to_h)
 
   # fifty_km_singles.each_with_index do |location, index|
   #   location_hash = location.transform_keys(&:to_sym)
@@ -67,7 +66,7 @@ class OrdersHelperTest < ActiveSupport::TestCase
   #   end
   # end
 
-  hundred_km_singles = CSV.open("test/fixtures/files/100_km_radius_loc.csv", headers: :first_row).map(&:to_h)
+  CSV.open("test/fixtures/files/100_km_radius_loc.csv", headers: :first_row).map(&:to_h)
 
   # hundred_km_singles.each_with_index do |location, index|
   #   location_hash = location.transform_keys(&:to_sym)
