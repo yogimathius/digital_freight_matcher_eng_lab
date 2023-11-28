@@ -21,3 +21,6 @@ Metrics/ClassLength:
   Max: 400
   Exclude:
     - "**/*_test.rb"
+
+Rails/Output:
+  Enabled: false
