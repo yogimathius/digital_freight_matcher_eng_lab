@@ -23,18 +23,11 @@ module OrdersHelper
 
     return true if distance_from_origin < proximity || distance_from_destination < proximity
 
-    Rails.logger.debug { "distance_from_origin #{distance_from_origin}" }
-    Rails.logger.debug { "distance_from_destination #{distance_from_destination}" }
-    triangular_height = get_triangular_height(
+    get_triangular_height(
+      route.route_distance,
       distance_from_origin,
-      distance_from_destination,
-      route.route_distance
+      distance_from_destination
     )
-
-    Rails.logger.debug "comparing"
-    Rails.logger.debug { "triangular height: #{triangular_height} " }
-    Rails.logger.debug { "proximity: #{proximity}" }
-    triangular_height < proximity
   end
 
   def profitability(order, route)
@@ -47,6 +40,7 @@ module OrdersHelper
       pickup_destination_distance,
       route.route_distance
     )
+
     triangular_height *= triangular_height
 
     hypotenuse = get_hypotenuse(pickup_coords, dropoff_coords, route)
