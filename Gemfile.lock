@@ -92,6 +92,7 @@ GEM
     diff-lcs (1.5.0)
     docile (1.4.0)
     erubi (1.12.0)
+    geocoder (1.8.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -270,6 +271,7 @@ DEPENDENCIES
   capybara
   database_cleaner (~> 1.8)
   debug
+  geocoder
   importmap-rails
   jbuilder
   puma (~> 5.0)
