@@ -1,28 +1,35 @@
+require 'geocoder'
+
 class Route < ApplicationRecord
   include Math
   extend OrdersHelper
   include CoordinateHelper
   include OrdersHelper
+  KM_MULTIPLIER = 1.60934
 
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
   has_one :truck, dependent: :destroy
   has_many :orders, dependent: :destroy
 
-  def self.find_matching_routes_for_order(order_params)
+  def self.routes_in_range(order_params, proximity)
     pick_up_coords, drop_off_coords = order_coords(order_params)
 
-    matching_pick_up_route = select do |route|
-      in_range?(pick_up_coords, route, 1)
+    matching_pick_up_route = Route.select do |route|
+      in_range?(pick_up_coords, route, proximity)
     end
 
-    matching_drop_off_routes = select do |route|
-      in_range?(drop_off_coords, route, 1)
+    matching_drop_off_routes = Route.select do |route|
+      in_range?(drop_off_coords, route, proximity)
     end
 
     matching_pick_up_route.filter do |route|
       matching_drop_off_routes.map(&:id).include?(route.id)
     end
+  end
+
+  def self.find_matching_routes_for_order(order_params)
+    routes_in_range(order_params, 1.4)
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     # matching_routes = matching_routes.filter do |route|
@@ -37,10 +44,10 @@ class Route < ApplicationRecord
   end
 
   def route_distance
-    spherical_distance(
-      origin,
-      destination
-    )
+    Geocoder::Calculations.distance_between(
+      [origin.latitude, origin.longitude],
+      [destination.latitude, destination.longitude]
+    ) * KM_MULTIPLIER
   end
 
   def route_profit
