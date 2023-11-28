@@ -21,14 +21,14 @@ class Truck < ApplicationRecord
   attr_reader :max_weight, :max_volume, :pallet_weight, :pallet_volume, :std_package_weight, :std_package_volume, :pallets_capacity, :std_packages_capacity
 
   def initialize
-    @max_weight = 9_180  
-    @max_volume = 1_700  
-    @pallet_weight = 440  
-    @pallet_volume = 64   
-    @std_package_weight = 66 
-    @std_package_volume = 18  
-    @pallets_capacity = (max_weight / pallet_weight).to_i  
-    @std_packages_capacity = (max_volume / std_package_volume).to_i  
+    @max_weight = 9_180
+    @max_volume = 1_700
+    @pallet_weight = 440
+    @pallet_volume = 64
+    @std_package_weight = 66
+    @std_package_volume = 18
+    @pallets_capacity = (max_weight / pallet_weight).to_i
+    @std_packages_capacity = (max_volume / std_package_volume).to_i
  end
 
   def capacity_by_weight
@@ -44,17 +44,16 @@ class Truck < ApplicationRecord
   end
 
   def has_capacity?(cargo)
-    total_cargo_weight = cargo[:packages].sum 
-    total_cargo_volume = cargo[:packages].volume
+    @max_weight = 9180
+    @max_volume = 1700
 
-    if total_cargo_weight <= max_weight && total_cargo_volume <= max_volume
-      return true  
+    total_cargo_weight = cargo.packages.sum(&:weight)
+    total_cargo_volume = cargo.packages.sum(&:volume)
+
+    if total_cargo_weight <= @max_weight && total_cargo_volume <= @max_volume
+      return true
     else
-      return false  
+      return false
     end
-  end
-end
-
-    
   end
 end

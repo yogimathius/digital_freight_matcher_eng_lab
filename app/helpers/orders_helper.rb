@@ -40,7 +40,6 @@ module OrdersHelper
       pickup_destination_distance,
       route.route_distance
     )
-
     triangular_height *= triangular_height
 
     hypotenuse = get_hypotenuse(pickup_coords, dropoff_coords, route)
