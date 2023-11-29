@@ -56,18 +56,6 @@ class RoutesController < ApplicationController
     end
   end
 
-  # DELETE /routes/1 or /routes/1.json
-  def destroy
-    @route.destroy
-
-    respond_to do |format|
-      format.html do
-        redirect_to routes_url, notice: "Route was successfully destroyed."
-      end
-      format.json { head :no_content }
-    end
-  end
-
   def matching_routes
     unless valid_order?(order_params)
       render plain: 'Invalid order parameters', status: :unprocessable_entity
