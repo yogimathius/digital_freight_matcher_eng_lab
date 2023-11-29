@@ -27,7 +27,7 @@ module OrdersHelper
       route.route_distance,
       distance_from_origin,
       distance_from_destination
-    )
+    ) < 1
   end
 
   def profitability(order, route)
