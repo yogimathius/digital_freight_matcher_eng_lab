@@ -7,10 +7,40 @@ class OrdersHelperTest < ActiveSupport::TestCase
 
   setup do
     @routes = Route.all
+    @order = orders(:order1)
   end
 
   def self.run_large_test_suite?
     ENV['RUN_LARGE_TEST_SUITE'].to_i == 1
+  end
+
+  test "order_coords returns origin and destination if order is Order object" do
+    pickup_coords, dropoff_coords = order_coords(@order)
+
+    assert_instance_of Location, pickup_coords
+    assert_instance_of Location, dropoff_coords
+  end
+
+  test "order_coords returns hash for pickup and dropoff if order is not Order object" do
+    @mock_order = {
+      cargo: {
+        packages: [1, 60, 'standard']
+      },
+      pick_up: {
+        latitude: 33.754413815792205,
+        longitude: -84.3875298776525
+      },
+      drop_off: {
+        latitude: 34.87433824316913,
+        longitude: -85.08447506395166
+      }
+    }
+    pickup_coords, dropoff_coords = order_coords(@mock_order)
+
+    assert_not_instance_of Location, pickup_coords
+    assert_not_instance_of Location, dropoff_coords
+    assert_instance_of Hash, pickup_coords
+    assert_instance_of Hash, dropoff_coords
   end
 
   if run_large_test_suite?
