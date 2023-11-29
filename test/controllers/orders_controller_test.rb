@@ -48,8 +48,8 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
         longitude: -84.39022107905394
       },
       drop_off: {
-        latitude: 34.87433824316913,
-        longitude: -85.08447506395166
+        latitude: 33.713341098350774,
+        longitude: -84.39685563810957
       }
     }
 
