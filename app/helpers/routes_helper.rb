@@ -10,9 +10,9 @@ module RoutesHelper
     deviation_time + PICKUP_DROPOFF_TIME_HOURS
   end
 
-  def fits_in_shift?(order, route)
+  def fits_in_shift?(_one_order, route)
     order_deviation_time = calculate_order_deviation_time(route)
-    total_route_deviation_time = route.orders.map { |order| calculate_order_deviation_time(route) }.sum
+    total_route_deviation_time = route.orders.map { |_one_order| calculate_order_deviation_time(route) }.sum
     current_route_time = total_route_deviation_time + route.time_hours
 
     current_route_time + order_deviation_time < MAX_SHIFT_DURATION
