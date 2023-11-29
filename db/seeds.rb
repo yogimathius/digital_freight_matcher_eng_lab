@@ -4,33 +4,33 @@ client2 = Client.create!
 
 # Create some locations
 atlanta = Location.create!(
-  latitude: 33.7488,
-  longitude: -84.3877
+  latitude: 33.75441382,
+  longitude: -84.38752988
 )
 
 ringgold = Location.create!(
-  latitude: 34.9249,
-  longitude: -85.1098
+  latitude: 34.91612101,
+  longitude: -85.11039247
 )
 
 augusta = Location.create!(
-  latitude: 33.4735,
-  longitude: -82.0105
+  latitude: 33.46767162,
+  longitude: -81.89207679
 )
 
 savannah = Location.create!(
-  latitude: 32.0809,
-  longitude: -81.0912
+  latitude: 32.08152969,
+  longitude: -80.97733964
 )
 
 albany = Location.create!(
-  latitude: 31.5785,
-  longitude: -84.1558
+  latitude: 31.57704107,
+  longitude: -84.18076688
 )
 
 columbus = Location.create!(
-  latitude: 32.4610,
-  longitude: -84.9877
+  latitude: 32.46617101,
+  longitude: -85.15879278
 )
 
 # Create some routes
