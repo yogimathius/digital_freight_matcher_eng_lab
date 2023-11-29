@@ -5,9 +5,6 @@ module CoordinateHelper
 
   include Math
   KM_MULTIPLIER = 1.60934
-  def deg2rad(lat, long)
-    [(lat * Math::PI / 180), (long * Math::PI / 180)]
-  end
 
   # rubocop:disable Metrics/AbcSize
   def get_distances(order_coords, route)
