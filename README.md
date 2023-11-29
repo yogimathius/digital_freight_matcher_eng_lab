@@ -79,6 +79,12 @@ route: [
 
 ![routes](/assets/existing_routes.png)
 
+### Testing Batch Locations
+
+To run the large batch location test suites, execute `RUN_LARGE_TEST_SUITE=1 bin/rails test`
+
+This seems to mess with the code coverage report, so it's best to do it separately if you wish to keep track of the coverage.
+
 ### Git Workflow
 
 ```
