@@ -37,32 +37,15 @@ class OrdersHelperTest < ActiveSupport::TestCase
     end
   end
 
-  # hundred_km_singles = CSV.open("test/fixtures/files/100_km_radius_loc.csv", headers: :first_row).map(&:to_h)
+  hundred_km_singles = CSV.open("test/fixtures/files/100_km_radius_loc.csv", headers: :first_row).map(&:to_h)
 
-  # hundred_km_singles.each do |location|
-  #   location_hash = location.transform_keys(&:to_sym)
-  #   test "in_range? bulk validates pickup and dropoff points from hundred km test data #{location_hash[:id]}" do
-  #     routes_in_range = @routes.map do |route|
-  #       in_range?(location_hash, route, 1)
-  #     end
-
-  #     is_valid = routes_in_range.include?(true) || routes_in_range.min < 1
-  #     if is_valid.to_s != location_hash[:valid].to_s
-  #       binding.break
-  #     end
-  #     assert_equal location_hash[:valid].to_s, is_valid.to_s
-  #   end
-  # end
-
-  failing_hundred_km_singles = CSV.open("test/fixtures/files/failing_100_km_loc.csv", headers: :first_row).map(&:to_h)
-  failing_hundred_km_singles.each do |location|
+  hundred_km_singles.each do |location|
     location_hash = location.transform_keys(&:to_sym)
-    test "in_range? bulk validates pickup and dropoff points from failing 100 km test data #{location_hash[:id]}" do
+    test "in_range? bulk validates pickup and dropoff points from hundred km test data #{location_hash[:id]}" do
       is_valid = @routes.any? do |route|
         in_range?(location_hash, route, 1)
       end
 
-      # is_valid = routes_in_range.include?(true) || routes_in_range.min < 1
       assert_equal location_hash[:valid].to_s, is_valid.to_s
     end
   end
