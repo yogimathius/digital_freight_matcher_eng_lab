@@ -1,4 +1,4 @@
-id,latitude,longitute,valid,type
+id,latitude,longitude,valid,type
 1,33.787567046457,-84.43611809226934,false,pick_up
 1,33.864181842818546,-84.58798952176612,false,drop_off
 2,33.69238132427891,-84.41433807670816,false,pick_up
