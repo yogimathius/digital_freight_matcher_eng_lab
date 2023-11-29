@@ -16,7 +16,6 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    @route = routes(:one)
     @route1 = routes(:route1)
   end
 
@@ -34,23 +33,23 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Route.count") do
       post routes_url,
            params: { route: {
-             anchor_point: @route.anchor_point,
-             cargo_cost: @route.cargo_cost,
-             contract_name: @route.contract_name,
-             destination_id: @route.destination_id,
-             empty_cargo_cost: @route.empty_cargo_cost,
-             margin: @route.margin,
-             markup: @route.markup,
-             miles_with_cargo: @route.miles_with_cargo,
-             operational_truck_cost: @route.operational_truck_cost,
-             origin_id: @route.origin_id,
-             pallets: @route.pallets,
-             path: @route.path,
-             pickup_dropoff_qty: @route.pickup_dropoff_qty,
-             price_based_on_cargo_cost: @route.price_based_on_cargo_cost,
-             price_based_on_total_cost: @route.price_based_on_total_cost,
-             time_hours: @route.time_hours,
-             total_miles: @route.total_miles
+             anchor_point: @route1.anchor_point,
+             cargo_cost: @route1.cargo_cost,
+             contract_name: @route1.contract_name,
+             destination_id: @route1.destination_id,
+             empty_cargo_cost: @route1.empty_cargo_cost,
+             margin: @route1.margin,
+             markup: @route1.markup,
+             miles_with_cargo: @route1.miles_with_cargo,
+             operational_truck_cost: @route1.operational_truck_cost,
+             origin_id: @route1.origin_id,
+             pallets: @route1.pallets,
+             path: @route1.path,
+             pickup_dropoff_qty: @route1.pickup_dropoff_qty,
+             price_based_on_cargo_cost: @route1.price_based_on_cargo_cost,
+             price_based_on_total_cost: @route1.price_based_on_total_cost,
+             time_hours: @route1.time_hours,
+             total_miles: @route1.total_miles
            } }
     end
 
@@ -58,40 +57,41 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show route" do
-    get route_url(@route)
+    get route_url(@route1)
     assert_response :success
   end
 
   test "should get edit" do
-    get edit_route_url(@route)
+    get edit_route_url(@route1)
     assert_response :success
   end
 
   test "should update route" do
-    patch route_url(@route),
+    patch route_url(@route1),
           params: { route: {
-            anchor_point: @route.anchor_point,
-            cargo_cost: @route.cargo_cost,
-            contract_name: @route.contract_name,
-            destination_id: @route.destination_id,
-            empty_cargo_cost: @route.empty_cargo_cost,
-            margin: @route.margin,
-            markup: @route.markup,
-            miles_with_cargo: @route.miles_with_cargo,
-            operational_truck_cost: @route.operational_truck_cost,
-            origin_id: @route.origin_id,
-            pallets: @route.pallets,
-            path: @route.path,
-            pickup_dropoff_qty: @route.pickup_dropoff_qty,
-            price_based_on_cargo_cost: @route.price_based_on_cargo_cost,
-            price_based_on_total_cost: @route.price_based_on_total_cost,
-            time_hours: @route.time_hours,
-            total_miles: @route.total_miles
+            anchor_point: @route1.anchor_point,
+            cargo_cost: @route1.cargo_cost,
+            contract_name: @route1.contract_name,
+            destination_id: @route1.destination_id,
+            empty_cargo_cost: @route1.empty_cargo_cost,
+            margin: @route1.margin,
+            markup: @route1.markup,
+            miles_with_cargo: @route1.miles_with_cargo,
+            operational_truck_cost: @route1.operational_truck_cost,
+            origin_id: @route1.origin_id,
+            pallets: @route1.pallets,
+            path: @route1.path,
+            pickup_dropoff_qty: @route1.pickup_dropoff_qty,
+            price_based_on_cargo_cost: @route1.price_based_on_cargo_cost,
+            price_based_on_total_cost: @route1.price_based_on_total_cost,
+            time_hours: @route1.time_hours,
+            total_miles: @route1.total_miles
           } }
-    assert_redirected_to route_url(@route)
+    assert_redirected_to route_url(@route1)
   end
 
   test "should destroy route" do
+    @route = routes(:route2)
     assert_difference("Route.count", -1) do
       delete route_url(@route)
     end
