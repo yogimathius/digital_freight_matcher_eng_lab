@@ -1,8 +1,10 @@
 require 'geocoder'
 
 class Route < ApplicationRecord
-  include Math
   extend OrdersHelper
+  extend RoutesHelper
+
+  include Math
   include CoordinateHelper
   include OrdersHelper
   KM_MULTIPLIER = 1.60934
@@ -29,18 +31,16 @@ class Route < ApplicationRecord
   end
 
   def self.find_matching_routes_for_order(order_params)
-    routes_in_range(order_params, 1.4)
+    matching_routes = routes_in_range(order_params, 1)
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     # matching_routes = matching_routes.filter do |route|
 
     # end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
-    # matching_routes = matching_routes.filter do |route|
-
-    # end
-
-    # matching_routes
+    matching_routes.filter do |route|
+      fits_in_shift?(order_params, route)
+    end
   end
 
   def route_distance
