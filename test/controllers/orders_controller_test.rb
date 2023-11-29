@@ -59,6 +59,31 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'No routes found', response.body.strip
   end
 
+  test "create should render error message on failure to save order" do
+    # Set up your order_params here based on your application requirements
+    order_params = {
+      cargo: {
+        packages: [1, "not a number", 'standard']
+      },
+      pick_up: {
+        latitude: 33.74724197037782,
+        longitude: -84.39022107905394
+      },
+      drop_off: {
+        latitude: 34.87433824316913,
+        longitude: -85.08447506395166
+      }
+    }
+
+    # Mock Route.find_matching_routes_for_order to return an empty array
+    # Route.stub(:find_matching_routes_for_order, []) do
+    post orders_url, params: { order: order_params }
+
+    assert_response :unprocessable_entity
+    assert_equal 'Failed to save order', response.body
+    # end
+  end
+
   test "should show order" do
     get order_url(@order)
     assert_response :success
