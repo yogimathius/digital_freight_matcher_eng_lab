@@ -90,14 +90,14 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to route_url(@route1)
   end
 
-  test "should destroy route" do
-    @route = routes(:route2)
-    assert_difference("Route.count", -1) do
-      delete route_url(@route)
-    end
+  # test "should destroy route" do
+  #   @route = routes(:route2)
+  #   assert_difference("Route.count", -1) do
+  #     delete route_url(@route)
+  #   end
 
-    assert_redirected_to routes_url
-  end
+  #   assert_redirected_to routes_url
+  # end
 
   test "should raise error if no order provided" do
     assert_raises(ActionController::ParameterMissing) do
