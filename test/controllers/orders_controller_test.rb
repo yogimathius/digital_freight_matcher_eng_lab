@@ -31,11 +31,13 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create order matching ringold route" do
-    result = post orders_url, params: { order: @mock_order }
+    post orders_url, params: { order: @mock_order }
 
     ringold_route = Route.find(1)
 
-    assert ringold_route, result
+    assert_response 200
+
+    assert_equal [ringold_route].to_json, response.body
   end
 
   test "should fail to create order if no matching routes" do
