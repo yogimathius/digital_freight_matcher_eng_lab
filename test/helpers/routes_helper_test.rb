@@ -30,15 +30,25 @@ class RoutesHelperTest < ActiveSupport::TestCase
     assert_equal result, false
   end
 
-  def create_mock_order
+  test "schedule_on_return? returns true when pickup is closer to destination than dropoff" do
+    # coords of this mock order will match atlanta to albany route
+    @on_return_order = create_mock_order(reverse_locations: true)
+    @albany_route = routes(:route4)
+
+    result = schedule_on_return?(@on_return_order, @albany_route)
+
+    assert_equal result, true
+  end
+
+  def create_mock_order(reverse_locations: false)
     truck1 = trucks(:truck1)
-    ringgold = locations(:ringgold)
-    atlanta = locations(:atlanta)
+    pickup = reverse_locations ? locations(:medicine_pickup) : locations(:ringgold)
+    dropoff = reverse_locations ? locations(:medicine_dropoff) : locations(:atlanta)
     client1 = clients(:client1)
 
     order1 = Order.create!(
-      origin_id: ringgold.id,
-      destination_id: atlanta.id,
+      origin_id: pickup.id,
+      destination_id: dropoff.id,
       client: client1,
       route: @route1
     )
