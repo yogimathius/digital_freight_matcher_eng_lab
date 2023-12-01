@@ -46,8 +46,71 @@ class RouteTest < ActiveSupport::TestCase
     assert matching_routes.empty?
   end
 
+  test "can_carry_medicine? returns true when no food or standard packages on route" do
+    # savannah route has no orders, so should return true
+    @savannah_route = routes("route3")
+
+    result = @savannah_route.can_carry_medicine?
+
+    assert_equal result, true
+  end
+
+  test "can_carry_medicine? returns false when food or standard packages on route" do
+    # ringgold route has order with standard package, so should return false
+    @ringgold_route = routes("route1")
+
+    result = @ringgold_route.can_carry_medicine?
+
+    assert_equal result, false
+  end
+
   def self.run_large_test_suite?
     ENV['RUN_LARGE_TEST_SUITE'].to_i == 1
+  end
+
+  def self.parse_json(json_string)
+    JSON.parse(json_string.gsub(/(\w+):/, '"\1":'))
+  end
+
+  def self.parse_json_array(json_string)
+    JSON.parse(json_string.gsub(/\w+/, '"\0"'))
+  end
+
+  def self.draft_order_object(csv_order)
+    order_object = {
+      cargo_attributes: {
+        packages_attributes: []
+      },
+      origin_attributes: {},
+      destination_attributes: {}
+    }
+
+    unpack_csv_order(order_object, csv_order)
+
+    Order.new(order_object)
+  end
+
+  def self.unpack_csv_order(order_obj, csv_order)
+    unpack_cargo(order_obj, csv_order["cargo"])
+    unpack_location(order_obj, :origin_attributes, csv_order["pick_up"])
+    unpack_location(order_obj, :destination_attributes, csv_order["drop_off"])
+  end
+
+  def self.unpack_cargo(order_obj, cargo_string)
+    packages = parse_json_array(cargo_string)
+    order_obj[:cargo_attributes][:packages_attributes] = [packages_to_hash(packages)]
+  end
+
+  def self.unpack_location(order_obj, key, location_string)
+    order_obj[key] = parse_json(location_string)
+    order_obj[key][:latitude] = order_obj[key]["latitude"].to_s
+    order_obj[key][:longitude] = order_obj[key]["longitude"].to_s
+    order_obj[key].delete("latitude")
+    order_obj[key].delete("longitude")
+  end
+
+  def self.packages_to_hash(packages)
+    [:volume, :weight, :package_type].zip(packages.map(&:to_s)).to_h
   end
 
   if run_large_test_suite?
@@ -86,7 +149,22 @@ class RouteTest < ActiveSupport::TestCase
         routes = Route.routes_in_range(order_params, 1)
 
         is_valid = routes.any?
-        # binding.break if is_valid.to_s != expected
+
+        assert_equal expected, is_valid.to_s
+      end
+    end
+
+    bonus_medicine = CSV.open("test/fixtures/files/full_orders_bonus.csv", headers: :first_row).map(&:to_h)
+    bonus_medicine.each do |csv_order|
+      expected = parse_json(csv_order["valid"]).to_s
+      id = parse_json(csv_order["id"])
+      order_arg = draft_order_object(csv_order)
+
+      test "in_range? bulk validates pickup and dropoff points for medicine packages #{id}" do
+        routes = Route.routes_in_range(order_arg, 1)
+
+        order_has_meds = order_arg.cargo.packages.first.package_type == 'medicine'
+        is_valid = order_has_meds ? routes.any?(&:can_carry_medicine?) : routes.any?
 
         assert_equal expected, is_valid.to_s
       end

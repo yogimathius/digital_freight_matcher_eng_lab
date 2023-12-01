@@ -59,4 +59,12 @@ class Route < ApplicationRecord
 
     price_based_on_cargo_cost + order_profits
   end
+
+  def can_carry_medicine?
+    orders.none? do |order|
+      order.cargo.packages.any? do |package|
+        package.package_type == 'food' || package.package_type == 'standard'
+      end
+    end
+  end
 end
