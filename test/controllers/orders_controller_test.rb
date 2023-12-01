@@ -77,13 +77,10 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    # Mock Route.find_matching_routes_for_order to return an empty array
-    # Route.stub(:find_matching_routes_for_order, []) do
     post orders_url, params: { order: order_params }
 
     assert_response :unprocessable_entity
     assert_equal 'Failed to save order', response.body
-    # end
   end
 
   test "should show order" do
