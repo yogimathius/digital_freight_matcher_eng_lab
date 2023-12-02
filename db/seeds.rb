@@ -53,6 +53,7 @@ route1 = Route.create!(
   time_hours: 4.0,
   contract_name: "Incurred"
 )
+Backlog.create(route: route1)
 
 # Route 2: Augusta
 route2 = Route.create!(
@@ -73,6 +74,7 @@ route2 = Route.create!(
   time_hours: 3.8,
   contract_name: "Incurred"
 )
+Backlog.create(route: route2)
 
 # Route 3: Savannah
 route3 = Route.create!(
@@ -93,6 +95,7 @@ route3 = Route.create!(
   time_hours: 9.9,
   contract_name: "Incurred"
 )
+Backlog.create(route: route3)
 
 # Route 4: Albany
 route4 = Route.create!(
@@ -113,6 +116,7 @@ route4 = Route.create!(
   time_hours: 7.3,
   contract_name: "Incurred"
 )
+Backlog.create(route: route4)
 
 # Route 5: Columbus
 route5 = Route.create!(
@@ -133,6 +137,7 @@ route5 = Route.create!(
   time_hours: 4.3,
   contract_name: "Incurred"
 )
+Backlog.create(route: route5)
 
 # Create some orders
 order1 = Order.create!(
