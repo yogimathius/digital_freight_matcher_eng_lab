@@ -14,7 +14,8 @@ class Route < ApplicationRecord
   belongs_to :origin, class_name: 'Location'
   belongs_to :destination, class_name: 'Location'
   has_one :truck, dependent: :destroy
-  has_many :orders, dependent: :destroy
+  has_many :orders, dependent: :destroy, class_name: 'Order'
+  has_many :backlog, dependent: :destroy, class_name: 'Order'
 
   def self.routes_in_range(order_params, proximity)
     pick_up_coords, drop_off_coords = order_coords(order_params)
@@ -33,16 +34,16 @@ class Route < ApplicationRecord
   end
 
   def self.find_matching_routes_for_order(order_params)
-    matching_routes = routes_in_range(order_params, 1)
+    found_routes = routes_in_range(order_params, 1)
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     matching_routes = matching_routes.filter do |route|
       route.truck.capacity?(order_params.cargo)
     end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
-    matching_routes.select do |route|
+    found_routes.select do |route|
       route.fits_in_shift?(order_params)
-    end
+    end.first
   end
 
   def route_distance
