@@ -27,14 +27,15 @@ class OrdersController < ApplicationController
     @order = Order.new(order_params)
     most_profitable_route =
       Route.find_matching_routes_for_order(@order)
-    unless most_profitable_route.any?
+
+    unless most_profitable_route
       render plain: 'No routes found', status: :unprocessable_entity
       return
     end
-    @order.route = most_profitable_route.first
+    @order.route = most_profitable_route
 
     @order.client = Client.create!
-    @order.cargo.truck = most_profitable_route.first.truck
+    @order.cargo.truck = most_profitable_route.truck
     @order.cargo.order = @order
 
     if @order.save

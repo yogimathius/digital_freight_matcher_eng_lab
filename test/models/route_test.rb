@@ -18,32 +18,28 @@ class RouteTest < ActiveSupport::TestCase
     assert_equal(@mock_route.price_based_on_cargo_cost + profitability(@mock_route.orders.first, @mock_route), route_profit)
   end
 
-  test "find_matching_routes_for_order returns routes if order fits in shift" do
-    matching_routes = Route.find_matching_routes_for_order(@mock_order)
+  test "find_matching_routes_for_order returns route if order fits in shift" do
+    matching_route = Route.find_matching_routes_for_order(@mock_order)
 
-    assert matching_routes.any?
+    assert matching_route.present?
 
-    route1 = matching_routes.first
-
-    8.times do
+    7.times do
       create_mock_order
     end
 
-    route1.save!
+    matching_route = Route.find_matching_routes_for_order(@mock_order)
 
-    matching_routes = Route.find_matching_routes_for_order(@mock_order)
-
-    assert matching_routes.any?
+    assert matching_route.present?
   end
 
-  test "find_matching_routes_for_order returns empty array if order doesn't fit in shift" do
+  test "find_matching_routes_for_order returns nil if order doesn't fit in shift" do
     10.times do
       create_mock_order
     end
 
-    matching_routes = Route.find_matching_routes_for_order(@mock_order)
+    matching_route = Route.find_matching_routes_for_order(@mock_order)
 
-    assert matching_routes.empty?
+    assert matching_route.nil?
   end
 
   test "can_carry_medicine? returns true when no food or standard packages on route" do
