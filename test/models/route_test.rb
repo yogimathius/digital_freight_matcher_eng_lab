@@ -95,6 +95,20 @@ class RouteTest < ActiveSupport::TestCase
     assert_equal true, short_route.should_take_break?
   end
 
+  test "find_matching_routes_for_order with large weight order returns routes if truck has capacity" do
+    @large_weight_order = create_mock_order(package_weight: 9130)
+    matching_routes = Route.find_matching_routes_for_order(@large_weight_order)
+
+    assert matching_routes.any?
+  end
+
+  test "find_matching_routes_for_order returns empty array if package size exceeds capacity" do
+    @too_large_weight_order = create_mock_order(package_weight: 9131)
+    matching_routes = Route.find_matching_routes_for_order(@too_large_weight_order)
+
+    assert matching_routes.none?
+  end
+
   def self.run_large_test_suite?
     ENV['RUN_LARGE_TEST_SUITE'].to_i == 1
   end
@@ -218,9 +232,10 @@ class RouteTest < ActiveSupport::TestCase
     end
   end
 
-  def create_mock_order(build_route_two: false)
+  def create_mock_order(build_route_two: false, package_weight: 50, package_volume: 10)
     route = build_route_two ? routes(:route2) : routes(:route1)
-    truck1 = route.truck
+
+    truck1 = trucks(:truck1)
     ringgold = locations(:ringgold)
     atlanta = locations(:atlanta)
     client1 = clients(:client1)
@@ -239,10 +254,11 @@ class RouteTest < ActiveSupport::TestCase
 
     Package.create!(
       volume: 10,
-      weight: 50,
+      weight: package_weight,
       package_type: "standard",
       cargo: cargo1
     )
     route.orders << order1
+    order1
   end
 end
