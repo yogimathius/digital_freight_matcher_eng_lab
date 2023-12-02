@@ -2,7 +2,7 @@
 
 class Cargo < ApplicationRecord
   belongs_to :order
-  belongs_to :truck
+  belongs_to :truck, optional: true
   has_many :packages, dependent: :destroy
 
   accepts_nested_attributes_for :packages, allow_destroy: true
