@@ -34,7 +34,7 @@ class Route < ApplicationRecord
   end
 
   def self.find_matching_route_for_order(order_params)
-    routes_in_range(order_params, 1).first
+    routes_in_range(order_params, 1)
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     matching_routes = matching_routes.filter do |route|
