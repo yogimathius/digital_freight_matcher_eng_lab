@@ -39,7 +39,6 @@ class Route < ApplicationRecord
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     matching_routes = matching_routes.filter do |route|
-      binding.break
       route.truck.has_capacity?(order_params.cargo)
     end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
