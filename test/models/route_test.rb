@@ -18,8 +18,8 @@ class RouteTest < ActiveSupport::TestCase
     assert_equal(@mock_route.price_based_on_cargo_cost + profitability(@mock_route.orders.first, @mock_route), route_profit)
   end
 
-  test "find_matching_routes_for_order returns route if order fits in shift" do
-    matching_route = Route.find_matching_routes_for_order(@mock_order)
+  test "find_matching_route_for_order returns route if order fits in shift" do
+    matching_route = Route.find_matching_route_for_order(@mock_order)
 
     assert matching_route.present?
 
@@ -27,17 +27,17 @@ class RouteTest < ActiveSupport::TestCase
       create_mock_order
     end
 
-    matching_route = Route.find_matching_routes_for_order(@mock_order)
+    matching_route = Route.find_matching_route_for_order(@mock_order)
 
     assert matching_route.present?
   end
 
-  test "find_matching_routes_for_order returns nil if order doesn't fit in shift" do
+  test "find_matching_route_for_order returns nil if order doesn't fit in shift" do
     10.times do
       create_mock_order
     end
 
-    matching_route = Route.find_matching_routes_for_order(@mock_order)
+    matching_route = Route.find_matching_route_for_order(@mock_order)
 
     assert matching_route.nil?
   end
