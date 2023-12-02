@@ -232,7 +232,7 @@ class RouteTest < ActiveSupport::TestCase
     end
   end
 
-  def create_mock_order(build_route_two: false, package_weight: 50, package_volume: 10)
+  def create_mock_order(build_route_two: false, package_weight: 50, _package_volume: 10)
     route = build_route_two ? routes(:route2) : routes(:route1)
 
     truck1 = trucks(:truck1)
