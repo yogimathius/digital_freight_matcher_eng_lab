@@ -36,11 +36,11 @@ class OrdersController < ApplicationController
 
     @order.client = Client.create!
 
-    matching_routes = matching_routes.select do |route|
+    fits_in_shift = matching_routes.select do |route|
       route.fits_in_shift?(@order)
     end
 
-    unless matching_routes.any?
+    unless fits_in_shift.any?
       backlog = Backlog.find(matching_routes.first.backlog.id)
       # binding.break
       backlog.orders << @order
