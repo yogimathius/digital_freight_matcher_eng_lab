@@ -18,18 +18,28 @@ class Truck < ApplicationRecord
   # has_many :cargos, dependent: :destroy
   belongs_to :route
 
-  def capacity?(cargo_arg)
-    @max_weight = 9180
-    @max_volume = 1700
+  MAX_WEIGHT = 9180
+  MAX_VOLUME = 1700
+  PALLET_WEIGHT = 440
+  PALLET_VOLUME = 64
 
-    total_cargo_weight = cargo.packages.sum(&:weight)
-    total_cargo_volume = cargo.packages.sum(&:volume)
+  def capacity?(cargo_arg)
+    total_cargo_weight = cargo.packages.sum(&:weight) + pallet_weight
+    total_cargo_volume = cargo.packages.sum(&:volume) + pallet_volume
 
     total_cargo_arg_weight = cargo_arg.packages.sum(&:weight)
     total_cargo_arg_volume = cargo_arg.packages.sum(&:volume)
 
-    return true if total_cargo_weight + total_cargo_arg_weight <= @max_weight && total_cargo_volume + total_cargo_arg_volume <= @max_volume
+    return true if total_cargo_weight + total_cargo_arg_weight <= MAX_WEIGHT && total_cargo_volume + total_cargo_arg_volume <= MAX_VOLUME
 
     false
+  end
+
+  def pallet_weight
+    route.pallets * PALLET_WEIGHT
+  end
+
+  def pallet_volume
+    route.pallets * PALLET_VOLUME
   end
 end

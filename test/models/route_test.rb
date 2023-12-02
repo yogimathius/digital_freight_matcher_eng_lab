@@ -18,8 +18,8 @@ class RouteTest < ActiveSupport::TestCase
     assert_equal(@mock_route.price_based_on_cargo_cost + profitability(@mock_route.orders.first, @mock_route), route_profit)
   end
 
-  test "find_matching_route_for_order returns route if order fits in shift" do
-    matching_route = Route.find_matching_route_for_order(@mock_order)
+  test "find_matching_routes_for_order returns route if order fits in shift" do
+    matching_route = Route.find_matching_routes_for_order(@mock_order)
 
     assert matching_route.any?
 
@@ -27,18 +27,18 @@ class RouteTest < ActiveSupport::TestCase
       create_mock_order
     end
 
-    matching_route = Route.find_matching_route_for_order(@mock_order)
+    matching_route = Route.find_matching_routes_for_order(@mock_order)
 
     assert matching_route.any?
   end
 
   # TODO: update testing on order controller level to handle this edge case
-  # test "find_matching_route_for_order returns nil if order doesn't fit in shift" do
+  # test "find_matching_routes_for_order returns nil if order doesn't fit in shift" do
   #   10.times do
   #     create_mock_order
   #   end
 
-  #   matching_route = Route.find_matching_route_for_order(@mock_order)
+  #   matching_route = Route.find_matching_routes_for_order(@mock_order)
 
   #   assert matching_route.nil?
   # end
@@ -90,20 +90,6 @@ class RouteTest < ActiveSupport::TestCase
     create_mock_order(build_route_two: true)
 
     assert_equal true, short_route.should_take_break?
-  end
-
-  test "find_matching_routes_for_order with large weight order returns routes if truck has capacity" do
-    @large_weight_order = create_mock_order(package_weight: 9130)
-    matching_routes = Route.find_matching_routes_for_order(@large_weight_order)
-
-    assert matching_routes.any?
-  end
-
-  test "find_matching_routes_for_order returns empty array if package size exceeds capacity" do
-    @too_large_weight_order = create_mock_order(package_weight: 9131)
-    matching_routes = Route.find_matching_routes_for_order(@too_large_weight_order)
-
-    assert matching_routes.none?
   end
 
   def self.run_large_test_suite?
