@@ -34,16 +34,16 @@ class Route < ApplicationRecord
   end
 
   def self.find_matching_route_for_order(order_params)
-    found_routes = routes_in_range(order_params, 1)
+    routes_in_range(order_params, 1).first
 
     # Check truck package capacity (make sure order doesn’t overload truck)
     matching_routes = matching_routes.filter do |route|
       route.truck.capacity?(order_params.cargo)
     end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
-    found_routes.select do |route|
-      route.fits_in_shift?(order_params)
-    end.first
+    # found_routes.select do |route|
+    #   route.fits_in_shift?(order_params)
+    # end.first
   end
 
   def route_distance
