@@ -23,6 +23,7 @@ class OrdersController < ApplicationController
   def edit; end
 
   # POST /orders or /orders.json
+  # rubocop:disable Metrics/AbcSize
   def create
     @order = Order.new(order_params)
     matching_route =
@@ -36,9 +37,17 @@ class OrdersController < ApplicationController
     @order.client = Client.create!
 
     unless matching_route.fits_in_shift?(@order)
-      matching_route.backlog << @order
-      matching_route.save
-      render plain: 'Shift duration maxed, adding to backlog', status: :unprocessable_entity
+      backlog = Backlog.find(matching_route.backlog.id)
+      # binding.break
+      backlog.orders << @order
+      @order.update(backlog_id: backlog.id)
+      # binding.break
+      response_data = { message: 'Shift duration maxed, adding to backlog', data: backlog.orders }
+      if @order.save
+        render json: response_data, status: :unprocessable_entity
+      else
+        render plain: 'Failed to save order', status: :unprocessable_entity
+      end
       return
     end
 
@@ -52,6 +61,7 @@ class OrdersController < ApplicationController
       render plain: 'Failed to save order', status: :unprocessable_entity
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # PATCH/PUT /orders/1 or /orders/1.json
   def update
