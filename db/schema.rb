@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_02_075553) do
+  create_table "backlogs", force: :cascade do |t|
+    t.integer "route_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["route_id"], name: "index_backlogs_on_route_id"
+  end
+
   create_table "cargos", force: :cascade do |t|
     t.integer "order_id"
     t.integer "truck_id"
@@ -39,6 +46,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.integer "route_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "backlog_id"
+    t.index ["backlog_id"], name: "index_orders_on_backlog_id"
     t.index ["client_id"], name: "index_orders_on_client_id"
     t.index ["destination_id"], name: "index_orders_on_destination_id"
     t.index ["origin_id"], name: "index_orders_on_origin_id"
@@ -98,8 +107,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_070307) do
     t.index ["route_id"], name: "index_trucks_on_route_id"
   end
 
+  add_foreign_key "backlogs", "routes"
   add_foreign_key "cargos", "orders"
   add_foreign_key "cargos", "trucks"
+  add_foreign_key "orders", "backlogs"
   add_foreign_key "orders", "clients"
   add_foreign_key "orders", "locations", column: "destination_id"
   add_foreign_key "orders", "locations", column: "origin_id"
