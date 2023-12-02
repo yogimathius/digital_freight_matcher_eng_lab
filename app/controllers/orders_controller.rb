@@ -26,18 +26,22 @@ class OrdersController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   def create
     @order = Order.new(order_params)
-    matching_route =
+    matching_routes =
       Route.find_matching_route_for_order(@order)
 
-    unless matching_route.any?
+    unless matching_routes.any?
       render plain: 'No routes found', status: :unprocessable_entity
       return
     end
 
     @order.client = Client.create!
 
-    unless matching_route.first.fits_in_shift?(@order)
-      backlog = Backlog.find(matching_route.first.backlog.id)
+    matching_routes = matching_routes.select do |route|
+      route.fits_in_shift?(@order)
+    end
+
+    unless matching_routes.any?
+      backlog = Backlog.find(matching_routes.first.backlog.id)
       # binding.break
       backlog.orders << @order
       @order.update(backlog_id: backlog.id)
@@ -51,12 +55,12 @@ class OrdersController < ApplicationController
       return
     end
 
-    @order.route = matching_route.first
+    @order.route = matching_routes.first
 
-    @order.cargo.truck = matching_route.first.truck
+    @order.cargo.truck = matching_routes.first.truck
 
     if @order.save
-      render json: matching_route.first, status: :ok
+      render json: matching_routes.first, status: :ok
     else
       render plain: 'Failed to save order', status: :unprocessable_entity
     end
