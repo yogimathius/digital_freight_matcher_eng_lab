@@ -29,15 +29,15 @@ class OrdersController < ApplicationController
     matching_route =
       Route.find_matching_route_for_order(@order)
 
-    unless matching_route
+    unless matching_route.any?
       render plain: 'No routes found', status: :unprocessable_entity
       return
     end
 
     @order.client = Client.create!
 
-    unless matching_route.fits_in_shift?(@order)
-      backlog = Backlog.find(matching_route.backlog.id)
+    unless matching_route.first.fits_in_shift?(@order)
+      backlog = Backlog.find(matching_route.first.backlog.id)
       # binding.break
       backlog.orders << @order
       @order.update(backlog_id: backlog.id)
@@ -51,12 +51,12 @@ class OrdersController < ApplicationController
       return
     end
 
-    @order.route = matching_route
+    @order.route = matching_route.first
 
-    @order.cargo.truck = matching_route.truck
+    @order.cargo.truck = matching_route.first.truck
 
     if @order.save
-      render json: matching_route, status: :ok
+      render json: matching_route.first, status: :ok
     else
       render plain: 'Failed to save order', status: :unprocessable_entity
     end

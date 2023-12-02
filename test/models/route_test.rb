@@ -21,7 +21,7 @@ class RouteTest < ActiveSupport::TestCase
   test "find_matching_route_for_order returns route if order fits in shift" do
     matching_route = Route.find_matching_route_for_order(@mock_order)
 
-    assert matching_route.present?
+    assert matching_route.any?
 
     7.times do
       create_mock_order
@@ -29,7 +29,7 @@ class RouteTest < ActiveSupport::TestCase
 
     matching_route = Route.find_matching_route_for_order(@mock_order)
 
-    assert matching_route.present?
+    assert matching_route.any?
   end
 
   # TODO: update testing on order controller level to handle this edge case
