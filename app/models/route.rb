@@ -7,6 +7,8 @@ class Route < ApplicationRecord
   include Math
   include CoordinateHelper
   include OrdersHelper
+  include RoutesHelper
+
   KM_MULTIPLIER = 1.60934
 
   belongs_to :origin, class_name: 'Location'
@@ -39,7 +41,7 @@ class Route < ApplicationRecord
     # end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
     matching_routes.filter do |route|
-      fits_in_shift?(order_params, route)
+      route.fits_in_shift?(order_params)
     end
   end
 
@@ -66,5 +68,29 @@ class Route < ApplicationRecord
         package.package_type == 'food' || package.package_type == 'standard'
       end
     end
+  end
+
+  def order_deviation_time
+    calculate_order_deviation_time(self)
+  end
+
+  def total_route_deviation_time
+    orders.sum { calculate_order_deviation_time(self) }
+  end
+
+  def route_time
+    total_route_deviation_time + time_hours
+  end
+
+  def current_route_time
+    should_take_break? ? route_time + 0.5 : route_time
+  end
+
+  def fits_in_shift?(_order)
+    current_route_time + order_deviation_time < MAX_SHIFT_DURATION
+  end
+
+  def should_take_break?
+    route_time > 4
   end
 end
