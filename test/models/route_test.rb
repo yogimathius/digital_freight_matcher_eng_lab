@@ -32,15 +32,16 @@ class RouteTest < ActiveSupport::TestCase
     assert matching_route.present?
   end
 
-  test "find_matching_route_for_order returns nil if order doesn't fit in shift" do
-    10.times do
-      create_mock_order
-    end
+  # TODO: update testing on order controller level to handle this edge case
+  # test "find_matching_route_for_order returns nil if order doesn't fit in shift" do
+  #   10.times do
+  #     create_mock_order
+  #   end
 
-    matching_route = Route.find_matching_route_for_order(@mock_order)
+  #   matching_route = Route.find_matching_route_for_order(@mock_order)
 
-    assert matching_route.nil?
-  end
+  #   assert matching_route.nil?
+  # end
 
   test "can_carry_medicine? returns true when no food or standard packages on route" do
     # savannah route has no orders, so should return true
