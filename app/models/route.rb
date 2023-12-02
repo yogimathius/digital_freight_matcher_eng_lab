@@ -40,7 +40,7 @@ class Route < ApplicationRecord
 
     # end
     # Check truck shift duration (route doesn’t exceed 10 hrs)
-    matching_routes.filter do |route|
+    matching_routes.select do |route|
       route.fits_in_shift?(order_params)
     end
   end
