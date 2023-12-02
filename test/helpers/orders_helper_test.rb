@@ -67,8 +67,6 @@ class OrdersHelperTest < ActiveSupport::TestCase
           in_range?(location_hash, route, 1)
         end
 
-        # is_valid = routes_in_range.include?(true) || routes_in_range.min < 1
-
         assert_equal location_hash[:valid].to_s, is_valid.to_s
       end
     end
