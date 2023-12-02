@@ -25,7 +25,7 @@ class RouteTest < ActiveSupport::TestCase
 
     route1 = matching_routes.first
 
-    9.times do
+    8.times do
       create_mock_order
     end
 
@@ -62,6 +62,37 @@ class RouteTest < ActiveSupport::TestCase
     result = @ringgold_route.can_carry_medicine?
 
     assert_equal result, false
+  end
+
+  test "fits_in_shift? returns true when order fits within 10 hour shift duration of route1" do
+    result = @mock_route.fits_in_shift?(@order1)
+    assert_equal result, true
+  end
+
+  test "fits_in_shift? returns false when order does not fit within 10 hour shift duration of route1" do
+    8.times do
+      create_mock_order
+    end
+
+    @still_fits = orders(:order1)
+    # Should return true when adding 9 orders
+    result = @mock_route.fits_in_shift?(@still_fits)
+    assert_equal result, true
+    # add one more
+    @mock_route.orders << @still_fits
+
+    @doesnt_fit = orders(:order1)
+    result = @mock_route.fits_in_shift?(@doesnt_fit)
+    assert_equal result, false
+  end
+
+  test "should_take_break? returns true if shift duration > 4 hours" do
+    short_route = routes(:route2)
+    assert_equal false, short_route.should_take_break?
+
+    create_mock_order(build_route_two: true)
+
+    assert_equal true, short_route.should_take_break?
   end
 
   def self.run_large_test_suite?
@@ -187,8 +218,9 @@ class RouteTest < ActiveSupport::TestCase
     end
   end
 
-  def create_mock_order
-    truck1 = trucks(:truck1)
+  def create_mock_order(build_route_two: false)
+    route = build_route_two ? routes(:route2) : routes(:route1)
+    truck1 = route.truck
     ringgold = locations(:ringgold)
     atlanta = locations(:atlanta)
     client1 = clients(:client1)
@@ -197,7 +229,7 @@ class RouteTest < ActiveSupport::TestCase
       origin_id: ringgold.id,
       destination_id: atlanta.id,
       client: client1,
-      route: @mock_route
+      route: route
     )
 
     cargo1 = Cargo.create!(
@@ -208,10 +240,9 @@ class RouteTest < ActiveSupport::TestCase
     Package.create!(
       volume: 10,
       weight: 50,
-      package_type: "Package Type X",
+      package_type: "standard",
       cargo: cargo1
     )
-
-    order1
+    route.orders << order1
   end
 end
