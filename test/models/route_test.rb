@@ -154,6 +154,22 @@ class RouteTest < ActiveSupport::TestCase
       end
     end
 
+    full_orders = CSV.open("test/fixtures/files/full_orders.csv", headers: :first_row).map(&:to_h)
+    full_orders.each do |full_csv_order|
+      expected = parse_json(full_csv_order["valid"]).to_s
+      id = parse_json(full_csv_order["id"])
+      order_arg = draft_order_object(full_csv_order)
+
+      test "in_range? bulk validates pickup and dropoff points for full orders #{id}" do
+        routes = Route.routes_in_range(order_arg, 1)
+
+        order_has_meds = order_arg.cargo.packages.first.package_type == 'medicine'
+        is_valid = order_has_meds ? routes.any?(&:can_carry_medicine?) : routes.any?
+
+        assert_equal expected, is_valid.to_s
+      end
+    end
+
     bonus_medicine = CSV.open("test/fixtures/files/full_orders_bonus.csv", headers: :first_row).map(&:to_h)
     bonus_medicine.each do |csv_order|
       expected = parse_json(csv_order["valid"]).to_s
