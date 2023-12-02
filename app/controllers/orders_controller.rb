@@ -27,7 +27,7 @@ class OrdersController < ApplicationController
   def create
     @order = Order.new(order_params)
     matching_routes =
-      Route.find_matching_route_for_order(@order)
+      Route.find_matching_routes_for_order(@order)
 
     unless matching_routes.any?
       render plain: 'No routes found', status: :unprocessable_entity
@@ -36,17 +36,17 @@ class OrdersController < ApplicationController
 
     @order.client = Client.create!
 
-    fits_in_shift = matching_routes.select do |route|
-      route.fits_in_shift?(@order)
+    matching_routes = check_fits_in_shift(matching_routes, @order)
+
+    has_capacity = matching_routes.select do |route|
+      route.truck.capacity?(@order.cargo)
     end
 
-    unless fits_in_shift.any?
+    unless has_capacity.any?
       backlog = Backlog.find(matching_routes.first.backlog.id)
-      # binding.break
       backlog.orders << @order
       @order.update(backlog_id: backlog.id)
-      # binding.break
-      response_data = { message: 'Shift duration maxed, adding to backlog', data: backlog.orders }
+      response_data = { message: 'Truck capacity maxed, adding to backlog', data: backlog.orders }
       if @order.save
         render json: response_data, status: :unprocessable_entity
       else
@@ -66,6 +66,24 @@ class OrdersController < ApplicationController
     end
   end
   # rubocop:enable Metrics/AbcSize
+
+  def check_fits_in_shift(matching_routes, order)
+    fits_in_shift = matching_routes.select do |route|
+      route.fits_in_shift?(order)
+    end
+
+    return fits_in_shift if fits_in_shift.any?
+
+    backlog = Backlog.find(matching_routes.first.backlog.id)
+    backlog.orders << order
+    order.update(backlog_id: backlog.id)
+    response_data = { message: 'Shift duration maxed, adding to backlog', data: backlog.orders }
+    if order.save
+      render json: response_data, status: :unprocessable_entity
+    else
+      render plain: 'Failed to save order', status: :unprocessable_entity
+    end
+  end
 
   # PATCH/PUT /orders/1 or /orders/1.json
   def update
