@@ -25,21 +25,29 @@ class OrdersController < ApplicationController
   # POST /orders or /orders.json
   def create
     @order = Order.new(order_params)
-    most_profitable_route =
-      Route.find_matching_routes_for_order(@order)
+    matching_route =
+      Route.find_matching_route_for_order(@order)
 
-    unless most_profitable_route
+    unless matching_route
       render plain: 'No routes found', status: :unprocessable_entity
       return
     end
-    @order.route = most_profitable_route
 
     @order.client = Client.create!
-    @order.cargo.truck = most_profitable_route.truck
-    @order.cargo.order = @order
+
+    unless matching_route.fits_in_shift?(@order)
+      matching_route.backlog << @order
+      matching_route.save
+      render plain: 'Shift duration maxed, adding to backlog', status: :unprocessable_entity
+      return
+    end
+
+    @order.route = matching_route
+
+    @order.cargo.truck = matching_route.truck
 
     if @order.save
-      render json: most_profitable_route, status: :ok
+      render json: matching_route, status: :ok
     else
       render plain: 'Failed to save order', status: :unprocessable_entity
     end

@@ -33,7 +33,7 @@ class Route < ApplicationRecord
     end
   end
 
-  def self.find_matching_routes_for_order(order_params)
+  def self.find_matching_route_for_order(order_params)
     found_routes = routes_in_range(order_params, 1)
 
     # Check truck package capacity (make sure order doesn’t overload truck)
