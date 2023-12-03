@@ -1,156 +1,175 @@
 # Engineering Lab 1 - Digital Freight Matching
 
-[Git Workflow](#git-workflow)
+## What is this API for?
 
-# Problem Statement
+See [Problem Statement](ProblemStatement.md) for more details
 
-Infinity and Beyond, a family-owned trucking enterprise based in Atlanta, GA, recently landed a significant contract with the Too-Big-To-Fail company. This substantial collaboration led them to acquire five new trucks and establish expansive routes spanning the entirety of the state. Despite having fixed rates determined by the volume of cargo transported, the company faces challenges. The mounting pressures of inflation and decreased contracted cargo have caused them to feel the financial pinch on some of these routes.
+## Prerequisites
 
-The dilemma deepens when considering their binding four-year contract that prevents them from canceling any existing routes. This contractual commitment, coupled with the specialized trucks they've already invested in for the project, has placed them in a tight spot. The repercussions of prematurely terminating the contract would involve hefty fines, and the ongoing maintenance of the trucks only adds to their predicament.
+Before you begin, ensure you have met the following requirements:
 
-In search of a solution, the owners of Infinity and Beyond, Mr. and Miss. Lightyear stumbled upon news about Digital Freight Matching (DFM). Investing their weekend into comprehending this concept, they began to see it as a potential lifeline for their company's current challenges.
+- Ruby 3.2.2 (use `rbenv` or `rvm` to install)
+- Bundler (installed via `gem install bundler`)
 
-# Solution
+## Getting Started
 
-Build a Pricing and Scheduling Service that allows Mr. and Miss. Lightyear to offer cargo space in the current fixed routes, to clients that want to transport through those same paths. The service will receive orders in a specific format (used in their current control system), and will try to match any existing route, based on the following criteria:
+To get the project up and running on your local machine, follow these steps:
 
-- Pick up and drop off locations must be at most at a distance of 1 km of any point inside any preexisting routes.
-- Cargo (set of packages) must fill in the truck's compartment (taking into account the original cargo, and all cargo being included on it).
-- Every pick up and drop off takes 15 minutes, plus deviation from the route (up to 1km from any preexisting point).
-- All costs per mile involved are given by a spreadsheet that's updated by Mr. Lightyear.
-- Cargo that can't fit on any route, can be saved and combined with other clients' cargo, to form a new route. New routes MUST be profitable.
-- Routes must go back to the point of origin, and can't last longer than 10 hours/day.
+1. **Clone the Repository:**
 
-**BONUS**:
+   ```bash
+   git clone git@github.com:yogimathius/digital_freight_matcher_eng_lab.git
+   cd digital_freight_matcher_eng_lab
+   ```
 
-- Includes cargo type: Some types can't be transported together;
-- Union: Truck drivers must take a 30 minute break after 4 hours of work.
+2. **Install Dependencies:**
 
-# Overall Architecture
+   ```bash
+   bundle install
+   ```
 
-![architecture](/assets/architecture.png)
+3. **Database Setup:**
 
-### Order format (received by the Service)
+   ```bash
+   rails db:create
+   rails db:migrate
+   rails db:seed
+   ```
+
+4. **Run the Server:**
+
+   ```bash
+   rails server
+   ```
+
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
+
+## Testing
+
+For main test suite
+
+```bash
+bin/rails test
+```
+
+To run large batch tests with csv data:
+
+```bash
+RUN_LARGE_TEST_SUITE=1 bin/rails test
+```
+
+For model validation tests:
+
+```bash
+bundle exec rspec
+```
+
+## How To Use
+
+This API is designed to receive orders in the following format:
+
+### Order Structure
 
 ```
 {
 	cargo: {
-		    "packages": [1, 60, 'standard'] // CBM (vol.), weight (pounds), type
-    },
-	pick-up: {
-		    "latitude": 33.754413815792205,
-		    "longitude": -84.3875298776525
-    },
-    drop-off: {
-		    "latitude": 34.87433824316913,
-		    "longitude": -85.08447506395166
-    }
+    "packages": [1, 60, 'standard'] // CBM (vol.), weight (pounds), type
+  },
+	pick_up: {
+    "latitude": 33.754413815792205,
+    "longitude": -84.3875298776525
+  },
+  drop_off: {
+    "latitude": 34.87433824316913,
+    "longitude": -85.08447506395166
+  }
 }
 ```
 
-### Route format
+To attempt adding an order to a route:
 
-```
-route: [
-	{
-        "latitude": 33.754413815792205,
-		"longitude": -84.3875298776525    // <- Starting Point
-    },
-    {
-	    "latitude": 34.87433823445323,
-		"longitude": -85.084123334995166
-    },
-    {
-	    "latitude": 34.87433823445323,
-		"longitude": -85.084123334995166
-    },
-    {
-	    "latitude": 34.87433824316913,
-		"longitude": -85.08447506395166
-    },
-	{
-        "latitude": 33.754413815792205,
-		"longitude": -84.3875298776525 // <- Last Point
+- using a REST client like [Postman](https://www.postman.com/) or [VSCode's REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client):
+
+- make a `POST` request to `http://localhost:3000/orders` using the above [Order Structure](#order-structure) or CURL, if you wish
+- if the order is within 1km proximity (using heron's formula, margin for error with large batch tests is ~0.2%) of a route's linear distance, the route can fit the order in it's shift duration and the truck has capacity for all of the packages, it will add the order to that route, and return the following data structure:
+
+  ```
+  {
+      "message": "Success! adding to route #1, heading from Atlanta to Ringgold",
+      "order": {
+          "id": 6,
+          "origin_id": 13,
+          "destination_id": 14,
+          "client_id": 6,
+          "route_id": 1,
+          "created_at": "2023-12-03T05:51:49.479Z",
+          "updated_at": "2023-12-03T05:51:49.479Z",
+          "backlog_id": null
+      }
+  }
+  ```
+
+- If no routes are found for the order, a generic response `No routes found` will be given
+- If the order matches routes but the all route's shift duration have been maxed already, the following response will be given:
+
+  ```
+  {
+    "message": "Shift duration maxed, adding to backlog",
+    "order": {
+        "id": 12,
+        "origin_id": 25,
+        "destination_id": 26,
+        "client_id": 13,
+        "route_id": 1,
+        "created_at": "2023-12-03T06:15:53.454Z",
+        "updated_at": "2023-12-03T06:15:53.454Z",
+        "backlog_id": 1 // Notice backlog ID
     }
-]
-```
+  }
+  ```
 
-### Current Routes
+- If the order matches routes but all truck capacity is full, the following response will be given:
 
-![routes](/assets/existing_routes.png)
+  ```
+  {
+    "message": "Truck capacity maxed, adding to backlog",
+    "order": {
+        "id": 3,
+        "origin_id": 7,
+        "destination_id": 8,
+        "client_id": 3,
+        "route_id": 1,
+        "created_at": "2023-12-03T06:17:56.344Z",
+        "updated_at": "2023-12-03T06:17:56.344Z",
+        "backlog_id": 1
+    }
+  }
+  ```
 
-### Testing Batch Locations
+- WIP: If the order contains a package with type `medicine`, or route contains `medicine` packages and `food` or `standard` is attempted to be mixed with `medicine` the following response will be given:
 
-To run the large batch location test suites, execute `RUN_LARGE_TEST_SUITE=1 bin/rails test`
+  ```
+  {
+    "message": "Current routes can't mix with medicine, adding to backlog",
+    "order": {
+        "id": 6,
+        "origin_id": 13,
+        "destination_id": 14,
+        "client_id": 6,
+        "route_id": null,
+        "created_at": "2023-12-03T06:58:07.216Z",
+        "updated_at": "2023-12-03T06:58:07.216Z",
+        "backlog_id": 1
+    }
+  }
+  ```
 
-This seems to mess with the code coverage report, so it's best to do it separately if you wish to keep track of the coverage.
+- order is always added to the backlog of the first matching route, which should be the most profitable
+- truckers will take a 30 min break if shift duration exceeds 4 hours
 
-### Git Workflow
+### TODOS
 
-```
-git pull main
-git checkout -b GH-username/action-to-update-repo (add, remove, update, or fix...)
-```
-
-Once work is complete: **On working branch**
-
-```
-git add . // or add individual files via vscode source control(RECOMMENDED)
-git commit -m "add commit message here" (also with same action verbs: add, remove, update or fix...)
-git push origin <branchname>
-```
-
-At this point, your command line will output this type of message:
-
-```
-Enumerating objects: 38, done.
-Counting objects: 100% (38/38), done.
-adsasdadfadfgadsfasds
-Delta compression using up to 8 threads
-Compressing objects: 100% (28/28), done.
-Writing objects: 100% (28/28), 2.81 KiB | 1.40 MiB/s, done.
-Total 28 (delta 18), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (18/18), completed with 8 local objects.
-remote:
-remote: Create a pull request for 'yogimathius/update-db-relations' on GitHub by visiting:
-remote:      https://github.com/yogimathius/digital_freight_matcher_eng_lab/pull/new/yogimathius/update-db-relations // <- `cmd + click`
-remote:
-To github.com:yogimathius/digital_freight_matcher_eng_lab.git
-```
-
-`cmd + click` the link to create a new pull request (redirects to github)
-
-Steps for reviewing:
-
-1. open draft pr
-2. self-review files changed
-3. once files are viewed, mark "ready for review", request reviews from teammates
-4. once approved, click rebase and merge in GH
-
-Steps for updating other branches with latest changes in main:
-
-```
-git pull main
-git checkout <branchname>
-git rebase main
-```
-
-**^^^^ (conflicts may need to be resolved here)**
-
-If they do:
-
-1. review conflicts in vscodes source control
-2. accept current/incoming/both change(s) depending on what you think is accurate, at this point it may be good to check it over with a teammate if you are unsure!
-3. `git add <filename-with-conflicts>` to stage the file but **do not commit, as it is not necessary when rebasing**
-4. `git rebase --continue` to continue or finish rebasing
-
-You may need to resolve conflicts more than once before you are finished rebasing, as it checks one commit in your branch at a time, from oldest to newest.
-
-# References
-
-- <a href="https://convoy.com/digital-freight-network/">Digital Freight Network</a>
-- <a href="https://www.freightcourse.com/digital-freight-matching/">DFM - Digital Freight Matching</a>
-- <a href="https://www.inboundlogistics.com/articles/deadhead-trucking/#:~:text=Deadhead%20trucking%20is%20when%20a,and%20how%20to%20minimize%20it">Deadhead Trucking.</a>
-- <a href="https://www.truckinfo.net/research/trucking-statistics">Trucking Trends</a>
-
-<span><i>Made at <a href='https://qwasar.io'>Qwasar Silicon Valley</a></i></span> <span><img alt='Qwasar Silicon Valley Logo' src='https://storage.googleapis.com/qwasar-public/qwasar-logo_50x50.png' width='20px'></span>
+- TODO: wire up check that pallets have been dropped before medicine can be picked up (have to test pickup, dropoff)
+- TODO: Complete test coverage for major functions (97% currently, but not all methods are tested.. these are covered through parent functions and a significant amount of child functions were added as a burst refactor)
+- TODO: Clear backlog after X amount of time? Queue backlog to next day's shifts?
+- TODO: Fix failing tests ~11000 assertions with `RUN_LARGE_TEST_SUITE=1 bin/rails test`, and 30 failures. Some of these are due to inaccurate lat/long, some are due to triangular formula for proximity.
