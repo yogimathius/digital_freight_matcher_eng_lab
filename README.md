@@ -10,6 +10,7 @@ Before you begin, ensure you have met the following requirements:
 
 - Ruby 3.2.2 (use `rbenv` or `rvm` to install)
 - Bundler (installed via `gem install bundler`)
+- Rails 7.0.8
 
 ## Getting Started
 
