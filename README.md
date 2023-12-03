@@ -170,6 +170,7 @@ To attempt adding an order to a route:
 
 ### TODOS
 
+- TODO: Sort matching routes by most profitable. We can usually rely on just one route being found based on proximity unless both pickup and dropoff are close to one Atlanta. In this case it is unlikely the profitability would be significant, but this would still be good to handle.
 - TODO: wire up check that pallets have been dropped before medicine can be picked up (have to test pickup, dropoff)
 - TODO: Complete test coverage for major functions (97% currently, but not all methods are tested.. these are covered through parent functions and a significant amount of child functions were added as a burst refactor)
 - TODO: Clear backlog after X amount of time? Queue backlog to next day's shifts?
