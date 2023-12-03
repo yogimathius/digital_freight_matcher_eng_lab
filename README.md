@@ -73,10 +73,10 @@ This API is designed to receive orders in the following format:
 
 ```
 {
-	cargo: {
+  cargo: {
     "packages": [1, 60, 'standard'] // CBM (vol.), weight (pounds), type
   },
-	pick_up: {
+  pick_up: {
     "latitude": 33.754413815792205,
     "longitude": -84.3875298776525
   },
@@ -89,9 +89,9 @@ This API is designed to receive orders in the following format:
 
 To attempt adding an order to a route:
 
-- using a REST client like [Postman](https://www.postman.com/) or [VSCode's REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client):
+- using a REST client like [Postman](https://www.postman.com/) or [VSCode's REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) or CURL:
 
-- make a `POST` request to `http://localhost:3000/orders` using the above [Order Structure](#order-structure) or CURL, if you wish
+- make a `POST` request to `http://localhost:3000/orders` using the above [Order Structure](#order-structure), if you wish
 - if the order is within 1km proximity (using heron's formula, margin for error with large batch tests is ~0.2%) of a route's linear distance, the route can fit the order in it's shift duration and the truck has capacity for all of the packages, it will add the order to that route, and return the following data structure:
 
   ```
