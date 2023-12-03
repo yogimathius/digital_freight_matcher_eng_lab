@@ -23,7 +23,6 @@ class OrdersController < ApplicationController
   def edit; end
 
   # POST /orders or /orders.json
-  # rubocop:disable Metrics/AbcSize
   def create
     @order = Order.new(order_params)
     matching_routes =
@@ -34,54 +33,80 @@ class OrdersController < ApplicationController
       return
     end
 
+    response_data = check_order_eligible(matching_routes, @order)
+
     @order.client = Client.create!
 
-    matching_routes = check_fits_in_shift(matching_routes, @order)
-
-    has_capacity = matching_routes.select do |route|
-      route.truck.capacity?(@order.cargo)
-    end
-
-    unless has_capacity.any?
-      backlog = Backlog.find(matching_routes.first.backlog.id)
-      backlog.orders << @order
-      @order.update(backlog_id: backlog.id)
-      response_data = { message: 'Truck capacity maxed, adding to backlog', data: backlog.orders }
-      if @order.save
-        render json: response_data, status: :unprocessable_entity
-      else
-        render plain: 'Failed to save order', status: :unprocessable_entity
-      end
-      return
-    end
-
-    @order.route = matching_routes.first
-
-    @order.cargo.truck = matching_routes.first.truck
-
     if @order.save
-      render json: matching_routes.first, status: :ok
+      render json: response_data, status: :ok
     else
       render plain: 'Failed to save order', status: :unprocessable_entity
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
-  def check_fits_in_shift(matching_routes, order)
-    fits_in_shift = matching_routes.select do |route|
+  def check_order_eligible(matching_routes, order)
+    found_route = matching_routes.first
+    matching_routes = find_route(matching_routes, order)
+    return add_to_backlog(order, found_route, "Current routes can't mix with medicine") unless matching_routes.any?
+
+    found_route = matching_routes.first
+
+    fits_in_shift = filter_routes_by_shift(matching_routes, order)
+    return add_to_backlog(order, found_route, "Shift duration maxed") unless fits_in_shift.any?
+
+    found_route = fits_in_shift.first
+
+    has_capacity = filter_routes_by_capacity(fits_in_shift, order)
+    return add_to_backlog(order, found_route, "Truck capacity maxed") unless has_capacity.any?
+
+    found_route = has_capacity.first
+
+    add_to_route(order, found_route)
+  end
+
+  def find_route(matching_routes, order)
+    handle_medicine_case(matching_routes, order.cargo.packages.first.package_type)
+  end
+
+  def filter_routes_by_shift(routes, order)
+    routes.filter { |route| route.fits_in_shift?(order) }
+  end
+
+  def filter_routes_by_capacity(routes, order)
+    routes.filter { |route| route.truck.capacity?(order.cargo) }
+  end
+
+  def check_fits_in_shift(routes, order)
+    fits_in_shift = routes.filter do |route|
       route.fits_in_shift?(order)
     end
 
-    return fits_in_shift if fits_in_shift.any?
+    return add_to_backlog(order, found_route, "Shift duration maxed") unless fits_in_shift.any?
 
-    backlog = Backlog.find(matching_routes.first.backlog.id)
+    fits_in_shift
+  end
+
+  def add_to_backlog(order, route, message)
+    backlog = Backlog.find(route.backlog.id)
     backlog.orders << order
     order.update(backlog_id: backlog.id)
-    response_data = { message: 'Shift duration maxed, adding to backlog', data: backlog.orders }
-    if order.save
-      render json: response_data, status: :unprocessable_entity
-    else
-      render plain: 'Failed to save order', status: :unprocessable_entity
+    { message: "#{message}, adding to backlog", order: @order }
+  end
+
+  def add_to_route(order, route)
+    order.route = route
+
+    order.cargo.truck = route.truck
+
+    { message: "Success! adding to route ##{route.id}, heading from Atlanta to #{route.anchor_point}", order: order }
+  end
+
+  def handle_medicine_case(matching_routes, package_type)
+    case package_type
+    when 'medicine'
+      matching_routes.filter(&:can_carry_medicine?)
+    when 'food', 'standard'
+      matching_routes.reject(&:can_carry_medicine?)
     end
   end
 
