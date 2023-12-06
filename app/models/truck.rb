@@ -26,15 +26,20 @@ class Truck < ApplicationRecord
   def capacity?(cargo_arg)
     return true if cargo.nil?
 
-    total_cargo_weight = cargo.packages.sum(&:weight) + pallet_weight
-    total_cargo_volume = cargo.packages.sum(&:volume) + pallet_volume
-
     total_cargo_arg_weight = cargo_arg.packages.sum(&:weight)
     total_cargo_arg_volume = cargo_arg.packages.sum(&:volume)
 
-    return true if total_cargo_weight + total_cargo_arg_weight <= MAX_WEIGHT && total_cargo_volume + total_cargo_arg_volume <= MAX_VOLUME
+    return true if truck_cargo_weight + total_cargo_arg_weight <= MAX_WEIGHT && truck_cargo_volume + total_cargo_arg_volume <= MAX_VOLUME
 
     false
+  end
+
+  def truck_cargo_weight
+    cargo.packages.sum(&:weight) + pallet_weight
+  end
+
+  def truck_cargo_volume
+    cargo.packages.sum(&:volume) + pallet_volume
   end
 
   def pallet_weight
