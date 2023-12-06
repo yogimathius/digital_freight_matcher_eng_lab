@@ -24,6 +24,8 @@ class Truck < ApplicationRecord
   PALLET_VOLUME = 64
 
   def capacity?(cargo_arg)
+    return true if cargo.nil?
+
     total_cargo_weight = cargo.packages.sum(&:weight) + pallet_weight
     total_cargo_volume = cargo.packages.sum(&:volume) + pallet_volume
 
