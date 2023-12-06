@@ -46,7 +46,7 @@ class OrdersController < ApplicationController
 
   def check_order_eligible(matching_routes, order)
     found_route = matching_routes.first
-    matching_routes = find_route(matching_routes, order)
+    # matching_routes = find_route(matching_routes, order)
     return add_to_backlog(order, found_route, "Current routes can't mix with medicine") unless matching_routes.any?
 
     found_route = matching_routes.first
