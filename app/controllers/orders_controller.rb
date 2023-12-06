@@ -45,9 +45,9 @@ class OrdersController < ApplicationController
   end
 
   def check_order_eligible(matching_routes, order)
-    # found_route = matching_routes.first
-    # matching_routes = find_route(matching_routes, order)
-    # return add_to_backlog(order, found_route, "Current routes can't mix with medicine") unless matching_routes.any?
+    found_route = matching_routes.first
+    matching_routes = find_route(matching_routes, order)
+    return add_to_backlog(order, found_route, "Current routes can't mix with medicine") unless matching_routes.any?
 
     found_route = matching_routes.first
 
@@ -106,7 +106,13 @@ class OrdersController < ApplicationController
     when 'medicine'
       matching_routes.filter(&:can_carry_medicine?)
     when 'food', 'standard'
-      matching_routes.reject(&:can_carry_medicine?)
+      matching_routes.filter do |route|
+        route.orders.any? do |order|
+          order.cargo.packages.any? do |package|
+            package.package_type == 'food' || package.package_type == 'standard'
+          end
+        end
+      end
     end
   end
 
